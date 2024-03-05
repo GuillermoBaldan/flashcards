@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Flashcards</title>
+    <link rel="stylesheet" href="./menu-deck.css">
+</head>
+<body>
+
+    <div id="deck-menu" class="deck-menu">
+        <h3 id="deck-title">Título del Mazo</h3>
+        <div class="deck-options">
+            <h3 id="option-pendientes">Pendientes: <a href="pending"></a></h3>
+            <h3 id="option-revisados">Revisados: <a href="reviewed"></a> </h3>
+            <button id="btn-add-card"><a href="./../create-card/create-card.html">Añadir Flashcard</a></button>
+            <button id="btn-take-test">Hacer Test</button>
+        </div>
+        <ul id="flashcards-list" class="flashcards-list">
+            <!-- Aquí se agregarán las flashcards -->
+        </ul>
+    </div>
+
+    <script src="./menu-deck.js"></script>
+</body>
+</html>
