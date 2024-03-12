@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú de Flashcards</title>
+    <link rel="stylesheet" href="./Style/index.css">
+</head>
+<body>
+    <div class="flashcard-menu">
+        <h2>Menú de Flashcards</h2>
+        <ul id="deck-list">
+            <!-- Aquí se agregarán los mazos -->
+        </ul>
+        <button id="btn-open-modal">Crear Nuevo Mazo</button> <!-- Botón para abrir el modal -->
+        <div id="create-deck-modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Crear Nuevo Mazo</h3>
+                <form action="#" method="post">
+                    <label for="deck-name">Nombre del Mazo:</label>
+                    <input type="text" id="deck-name" name="deck-name" placeholder="Ingrese el nombre del mazo" required>
+                    <button type="submit" id="create-deck-btn">Crear</button>
+                </form>
+            </div>
+        </div>
+    </div>
+  
+    <script src="./JS/loadData.js"></script>
+    <script src="./JS/modal.js"></script>
+    <script src="./JS/processData.js"></script>
+</body>
+</html>

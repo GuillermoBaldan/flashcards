@@ -1,4 +1,4 @@
-let data = {
+{
     "mazos": [
       {
         "titulo": "Mazo de Matemáticas",
@@ -23,7 +23,7 @@ let data = {
             "id": 3,
             "pregunta": "¿Cuál es el resultado de 5 * 5?",
             "respuesta": "25",
-            "AT": 172800, /* Dos días en segundos */
+            "AT": 172800, 
             "lastTime": "2024-03-04T18:45:00",
             "nextTime": "2024-03-06T18:45:00"
           }
@@ -44,12 +44,12 @@ let data = {
             "id": 5,
             "pregunta": "¿Cuál fue la primera guerra mundial?",
             "respuesta": "La Primera Guerra Mundial",
-            "AT": 172800, /* Dos días en segundos */
+            "AT": 172800, 
             "lastTime": "2024-03-03T08:10:20",
             "nextTime": "2024-03-05T08:10:20"
           }
         ]
       }
     ]
-  };
+  }
   
