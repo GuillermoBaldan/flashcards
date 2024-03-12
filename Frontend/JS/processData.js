@@ -20,9 +20,11 @@
                 const listItem = document.createElement('li');
                 const anchor = document.createElement('a');
                 anchor.textContent = mazo.titulo;
-                anchor.href = '#';
+                anchor.href = "deck.html";
                 listItem.appendChild(anchor);
                 deckList.appendChild(listItem); // Agregar listItem como hijo de deckList
+                //Añadimos una funcionalidad para que cada vez que se pinche un elemento a se ponga la cookie deck
+                programmingDeckCookies();
             });
         } else {
             console.error('No se han cargado los datos.');

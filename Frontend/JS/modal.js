@@ -42,6 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Cerrar el modal después de agregar el mazo
                 modal.style.display = 'none';
                 updateDeckList(dataDecks);
+                //Almacenamos los datos en una cookie llamada dataDecks
+                setObjectToCookie(dataDecks,"dataDecks")
             })
         });
 

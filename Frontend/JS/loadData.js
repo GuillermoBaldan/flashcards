@@ -1,3 +1,5 @@
+//Este archivo js es para index.html
+
 let dataDecks;
 
 async function getData() {
@@ -27,10 +29,13 @@ async function getData() {
                const listItem = document.createElement('li');
                const anchor = document.createElement('a');
                anchor.textContent = mazo.titulo;
-               anchor.href = '#';
+               anchor.href = 'deck.html';
                listItem.appendChild(anchor);
                deckList.appendChild(listItem); // Agregar listItem como hijo de deckList
            });
+
+           //Asociamos un Even Listener a cada elemento li que creará una cookie al pinchar en el.
+           programmingDeckCookies();
        })
        .catch(error => console.error('Error al cargar el archivo data.js:', error));
 
