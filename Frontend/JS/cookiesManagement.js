@@ -23,7 +23,6 @@ function setObjectToCookie(object, cookieName) {
 function cookieToObject(cookieName) {
     // Obtener todas las cookies
     let cookies = document.cookie.split(';');
-    console.log(cookies);
     // Buscar la cookie con el nombre dado
     for (let i = 0; i < cookies.length; i++) {
         let cookie = cookies[i].trim();

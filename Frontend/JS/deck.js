@@ -1,3 +1,7 @@
+//Declaración de variables
+
+let dataDecks;
+
 
 function writeFlashcardsNumber(dataDecks){
     // Obtener el valor de la cookie "deck"
@@ -8,10 +12,15 @@ function writeFlashcardsNumber(dataDecks){
 
     // Encontrar el mazo correspondiente al valor de la cookie "deck"
    console.log(dataDecks)
-    let mazoSeleccionado = dataDecks.flashcards.find(function(mazo) {
-        return mazo.titulo === valorDeck;
+    let mazoSeleccionado = dataDecks.mazos.find(function(mazo) {
+        if(mazo.titulo === valorDeck){
+            return mazo;
+        }else{
+            return null;
+        }
+        
     });
-  
+    console.log(mazoSeleccionado)
     // Verificar si se encontró el mazo
     if (mazoSeleccionado) {
         // Obtener la longitud del array "flashcards"
@@ -24,6 +33,34 @@ function writeFlashcardsNumber(dataDecks){
         }
     }
   }
+
+  function getVirginCardsFromDeck(dataDecks, deck) {
+    let flashcardsSeleccionadas = [];
+  
+    // Busca el mazo especificado por 'deck'
+    const mazoEspecificado = dataDecks.mazos.find(mazo => mazo.titulo === deck);
+  
+    // Si el mazo especificado no se encuentra, devuelve un array vacío
+    if (!mazoEspecificado) {
+      return flashcardsSeleccionadas;
+    }
+  
+    // Recorre todas las flashcards del mazo especificado
+    mazoEspecificado.flashcards.forEach(flashcard => {
+      // Verifica si la flashcard cumple con las condiciones
+      if (flashcard.AT === 0 && flashcard.lastTime === null && flashcard.nextTime === null) {
+        // Agrega la flashcard al array de flashcards seleccionadas
+        flashcardsSeleccionadas.push(flashcard);
+      }
+    });
+  
+    // Devuelve el array con las flashcards seleccionadas
+    return flashcardsSeleccionadas;
+  }
+
+
+
+
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -60,9 +97,10 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
-    dataDecks = cookieToObject("dataDecks")
+    dataDecks= cookieToObject("dataDecks");
     console.log(dataDecks);
     writeFlashcardsNumber(dataDecks);
-  
+    let virginCars = getVirginCardsFromDeck(dataDecks,getCookie("deck"))
+    console.log(virginCars)
 });
 

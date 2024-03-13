@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Obtener los datos existentes
         
         // Añadir un nuevo objeto con el título proporcionado
-                dataDecks.mazos.push({ titulo: deckName });
+                dataDecks.mazos.push({ titulo: deckName, flashcards: []});
                 console.log('Nuevo mazo añadido:', deckName);
                 console.log('Datos actualizados:', dataDecks);
 
@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDeckList(dataDecks);
                 //Almacenamos los datos en una cookie llamada dataDecks
                 setObjectToCookie(dataDecks,"dataDecks")
+                console.log("Prueba de recuperación de cookie")
+                console.log(cookieToObject("dataDecks"))
             })
         });
 
