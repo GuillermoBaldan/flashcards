@@ -140,6 +140,8 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 document.addEventListener("DOMContentLoaded", function() {
+    //Al cargar la página oculta los botones de acierto o fallo
+    document.getElementById("buttonsResponseContainer").style.display = "none";
     let selectedDeck = getCookie("deck");
     dataDecks = cookieToObject("dataDecks");
     console.log(dataDecks);
@@ -152,7 +154,10 @@ document.addEventListener("DOMContentLoaded", function() {
     let cardsForReview = virginCards.concat(pastCards);
     let queue = queueSortingAlgorithm(cardsForReview);
     let questionText = getQuestionFromFirst(queue)
-    
+    //Habilitamos el botón de mostrar respuesta cuando haya contenido que mostrar
+    if (queue.length > 0) {
+        document.getElementById("show-answer").disabled = false;
+    }
     // Actualiza el elemento HTML con el número de tarjetas para revisar
     let pendingNumberElement = document.getElementById("cards-for-review");
     pendingNumberElement.textContent = cardsForReview.length;
@@ -163,6 +168,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
     let questionTextElement = document.getElementById("question");
     questionTextElement.textContent = questionText;
+
+    document.getElementById("show-answer").addEventListener("click", function() {
+        // Get the respuesta of the first flashcard in the queue
+        let respuesta = queue[0].respuesta;
+        
+        // Display the respuesta in the HTML
+        document.getElementById("question").textContent = respuesta;
+        //Mostramos los botones de acierto y fallo
+        document.getElementById("buttonsResponseContainer").style.display = "block";
+        // Enable the buttons "acierto" and "fallo"
+        document.getElementById("failure").disabled = false;
+        document.getElementById("success").disabled = false;
+
+    });
+
+     // Add event listener to the "failures" button
+     document.getElementById("failure").addEventListener("click", function() {
+        // Set AT = 0 for the first flashcard in the queue
+        if (queue.length > 0) {
+            queue[0].AT = 30000;
+            queue[0].lastTime = Date.now(); // Set lastTime to current date
+            queue[0].nextTime = queue[0].lastTime + queue[0].AT;
+        }
+        queue = queueSortingAlgorithm(queue);
+    });
 });
 
 
