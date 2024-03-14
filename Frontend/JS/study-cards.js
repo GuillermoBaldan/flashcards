@@ -1,6 +1,8 @@
 //Declaración de variables
 
 let dataDecks;
+let studyCardsSessionCounter;
+let learnedCards = [];
 
 
 function writeFlashcardsNumber(dataDecks){
@@ -11,7 +13,7 @@ function writeFlashcardsNumber(dataDecks){
     /* let dataDecks = cookieToObject("dataDecks") */
 
     // Encontrar el mazo correspondiente al valor de la cookie "deck"
-   console.log(dataDecks)
+/*    console.log(dataDecks) */
     let mazoSeleccionado = dataDecks.mazos.find(function(mazo) {
         if(mazo.titulo === valorDeck){
             return mazo;
@@ -20,7 +22,7 @@ function writeFlashcardsNumber(dataDecks){
         }
         
     });
-    console.log(mazoSeleccionado)
+    /* console.log(mazoSeleccionado) */
     // Verificar si se encontró el mazo
     if (mazoSeleccionado) {
         // Obtener la longitud del array "flashcards"
@@ -29,7 +31,7 @@ function writeFlashcardsNumber(dataDecks){
         // Actualizar el contenido del elemento <a> con el id "collection-number"
         let collectionNumberElement = document.getElementById("collection-number");
         if (collectionNumberElement) {
-            collectionNumberElement.textContent = "Número de Flashcards: " + numFlashcards;
+            collectionNumberElement.textContent = "" + numFlashcards;
         }
     }
   }
@@ -147,43 +149,20 @@ document.addEventListener("DOMContentLoaded", function() {
     let pastCards = getPastCards(dataDecks, selectedDeck);
     let selectedCards = getCardsFromDeck(dataDecks, selectedDeck);
     let reviewedNumber = selectedCards.length - virginCards.length - pastCards.length;
+    let cardsForReview = virginCards.concat(pastCards);
+    let queue = queueSortingAlgorithm(cardsForReview);
+    let questionText = getQuestionFromFirst(queue)
     
-    // Actualiza el elemento HTML con el número de tarjetas pendientes
-    let pendingNumberElement = document.getElementById("pending-number");
-    pendingNumberElement.textContent = virginCards.length + pastCards.length;
+    // Actualiza el elemento HTML con el número de tarjetas para revisar
+    let pendingNumberElement = document.getElementById("cards-for-review");
+    pendingNumberElement.textContent = cardsForReview.length;
 
-    // Actualiza el elemento HTML con el número de tarjetas revisadas
+    // Actualiza el elemento HTML con el número de tarjetas revisadas durante la sesión
     let reviewedNumberElement = document.getElementById("reviewed-number");
-    reviewedNumberElement.textContent = reviewedNumber;
+    reviewedNumberElement.textContent = cardsForReview.length - queue.length;
+
+    let questionTextElement = document.getElementById("question");
+    questionTextElement.textContent = questionText;
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Define el evento clic en el botón study-button
-    document.getElementById("study-button").addEventListener("click", function() {
-        // Redirige a la página study-cards.html
-        window.location.href = "study-cards.html";
-    });
 
-    let selectedDeck = getCookie("deck");
-    dataDecks = cookieToObject("dataDecks");
-    console.log(dataDecks);
-    writeFlashcardsNumber(dataDecks);
-
-    let virginCards = getVirginCardsFromDeck(dataDecks, selectedDeck);
-    let pastCards = getPastCards(dataDecks, selectedDeck);
-    let selectedCards = getCardsFromDeck(dataDecks, selectedDeck);
-    let reviewedNumber = selectedCards.length - virginCards.length - pastCards.length;
-    
-    // Actualiza el elemento HTML con el número de tarjetas pendientes
-    let pendingNumberElement = document.getElementById("pending-number");
-    pendingNumberElement.textContent = virginCards.length + pastCards.length;
-
-    // Actualiza el elemento HTML con el número de tarjetas revisadas
-    let reviewedNumberElement = document.getElementById("reviewed-number");
-    reviewedNumberElement.textContent = reviewedNumber;
-
-    // Habilita el botón solo si hay tarjetas pendientes
-    if (virginCards.length + pastCards.length > 0) {
-        document.getElementById("study-button").disabled = false;
-    }
-});
