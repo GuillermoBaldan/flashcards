@@ -1,19 +1,42 @@
-//Declaración de variables
+//Declaración de constantes
+const buttonsResponseContainer = document.getElementById("buttonsResponseContainer");
+const showAnswerButton = document.getElementById("show-answer");
+const questionTextElement = document.getElementById("question");
+const failureButton = document.getElementById("failure");
+const successButton = document.getElementById("success");
 
-let dataDecks;
+
+//Declaración de variables
+let collectionName = document.getElementById("collection-name");
+let cardsToSee = document.getElementById("cards-for-review"); 
+let reviewedNumberCards = document.getElementById("reviewed-number");
+// Obtener el valor de la cookie "valorDeck"
+
+let valorDeck = getCookie("deck");
+
+
+let dataDecks = cookieToObject("dataDecks");
+let answer;
 let studyCardsSessionCounter;
 let learnedCards = [];
+let virginCards = getVirginCardsFromDeck(dataDecks, valorDeck);
+let pastCards = getPastCards(dataDecks, valorDeck);
+let selectedCards = getCardsFromDeck(dataDecks, valorDeck);
+let reviewedNumber = selectedCards.length - virginCards.length - pastCards.length;
+let cardsForReview = virginCards.concat(pastCards);
+let queue = queueSortingAlgorithm(cardsForReview);
+let questionText = getQuestionFromFirst(queue);
 
 
-function writeFlashcardsNumber(dataDecks){
-    // Obtener el valor de la cookie "deck"
-    let valorDeck = getCookie("deck");
-    
-    //Obtener el mazo de las cookies
-    /* let dataDecks = cookieToObject("dataDecks") */
+function writeCollectionName(){
+    collectionName.textContent = "" + valorDeck;
+}
 
-    // Encontrar el mazo correspondiente al valor de la cookie "deck"
-/*    console.log(dataDecks) */
+
+function writeFlashcardsToSee(dataDecks,valorDeck){
+    // Encontrar el mazo correspondiente al valor de la cookie "valorDeck"
+    console.log(dataDecks)
+    console.log(valorDeck)
     let mazoSeleccionado = dataDecks.mazos.find(function(mazo) {
         if(mazo.titulo === valorDeck){
             return mazo;
@@ -22,25 +45,21 @@ function writeFlashcardsNumber(dataDecks){
         }
         
     });
-    /* console.log(mazoSeleccionado) */
-    // Verificar si se encontró el mazo
-    if (mazoSeleccionado) {
-        // Obtener la longitud del array "flashcards"
-        let numFlashcards = mazoSeleccionado.flashcards.length;
-  
-        // Actualizar el contenido del elemento <a> con el id "collection-number"
-        let collectionNumberElement = document.getElementById("collection-number");
-        if (collectionNumberElement) {
-            collectionNumberElement.textContent = "" + numFlashcards;
-        }
-    }
+    console.log(mazoSeleccionado)
+    cardsToSee.textContent = "" + mazoSeleccionado.flashcards.length;
   }
 
-  function getVirginCardsFromDeck(dataDecks, deck) {
+  function writeReviewedCards(dataDecks,valorDeck){
+    let numbercards =  getPastCards(dataDecks, valorDeck).length;
+    console.log(numbercards)
+    reviewedNumberCards.textContent = "" + numbercards;
+  }
+
+  function getVirginCardsFromDeck(dataDecks, valorDeck) {
     let flashcardsSeleccionadas = [];
   
-    // Busca el mazo especificado por 'deck'
-    const mazoEspecificado = dataDecks.mazos.find(mazo => mazo.titulo === deck);
+    // Busca el mazo especificado por 'valorDeck'
+    const mazoEspecificado = dataDecks.mazos.find(mazo => mazo.titulo === valorDeck);
   
     // Si el mazo especificado no se encuentra, devuelve un array vacío
     if (!mazoEspecificado) {
@@ -63,21 +82,21 @@ function writeFlashcardsNumber(dataDecks){
 /**
  * Retrieves all cards whose nextTime is in the past compared to the current date.
  * @param {Object} dataDecks The data containing all decks and cards.
- * @param {string} deck The name of the deck to filter cards from.
+ * @param {string} valorDeck The name of the valorDeck to filter cards from.
  * @returns {Array} An array containing cards whose nextTime is in the past.
  */
-function getPastCards(dataDecks, deck) {
+function getPastCards(dataDecks, valorDeck) {
     let pastCards = [];
   
-    // Find the specified deck
-    const specifiedDeck = dataDecks.mazos.find(mazo => mazo.titulo === deck);
+    // Find the specified valorDeck
+    const specifiedDeck = dataDecks.mazos.find(mazo => mazo.titulo === valorDeck);
   
-    // If the specified deck is not found, return an empty array
+    // If the specified valorDeck is not found, return an empty array
     if (!specifiedDeck) {
       return pastCards;
     }
   
-    // Iterate over all cards in the specified deck
+    // Iterate over all cards in the specified valorDeck
     specifiedDeck.flashcards.forEach(flashcard => {
       // Check if nextTime of the flashcard is in the past
       if (isPastDate(flashcard.nextTime) && flashcard.nextTime!=null) {
@@ -103,96 +122,68 @@ function getPastCards(dataDecks, deck) {
     return specifiedDeck.flashcards;
   }
 
+  // Función para manejar la situación en la que no hay más tarjetas en la cola
+function handleNoCardsInQueue() {
+  showAnswerButton.style.display = "none";
+  failureButton.style.display = "none";
+  successButton.style.display = "none";
+  // Mostrar un botón para ir al menú principal
+  const goToMainMenuButton = document.createElement("button");
+  goToMainMenuButton.textContent = "Ir al menú principal";
+  goToMainMenuButton.addEventListener("click", function() {
+      // Redirigir al usuario a la página principal (index.html)
+      window.location.href = "index.html";
+  });
+  buttonsResponseContainer.appendChild(goToMainMenuButton);
+}
+
+function questionScreen() {
+  questionText = getQuestionFromFirst(queue);
+  if (queue.length!=0){
+    questionTextElement.textContent = questionText;
+    showAnswerButton.style.display = "block";
+    failureButton.style.display = "none"; // Desaparecer botón de fallo
+    successButton.style.display = "none"; // Desaparecer botón de bien
+  }else{
+    console.log("sin cola")
+    handleNoCardsInQueue();
+  }
+}
 
 
-
-document.addEventListener("DOMContentLoaded", function() {
     // Función para obtener el valor de una cookie por su nombre
     function getCookie(nombre) {
-        let cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            let cookie = cookies[i].trim();
-            if (cookie.indexOf(nombre + '=') === 0) {
-                return cookie.substring(nombre.length + 1, cookie.length);
-            }
-        }
-        return "";
-    }
+      let cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          let cookie = cookies[i].trim();
+          if (cookie.indexOf(nombre + '=') === 0) {
+              return cookie.substring(nombre.length + 1, cookie.length);
+          }
+      }
+      return "";
+  }
 
-   
-    // Opcionalmente, puedes imprimir el valor de una cookie específica
-    let deck = getCookie("deck");
-    console.log("El valor de la cookie 'deck' es:", deck);
-});
+  function answerScreen(){
+    console.log("pantalla de mostrar respuesta")
+    answer = queue[0].respuesta;
+    questionTextElement.textContent = answer;
+    buttonsResponseContainer.style.display = "block";
+    failureButton.disabled = false;
+    successButton.disabled = false;
+    showAnswerButton.style.display = "none"; // Haz desaparecer el botón de mostrar respuesta
+   }
 
-document.addEventListener("DOMContentLoaded", function() {
-    // Función para obtener el valor de una cookie por su nombre
-  
 
-    // Obtener el valor de la cookie "deck"
-    let valorDeck = getCookie("deck");
+   function showInformationPannel(){
+    //Escribir Nombre de colección
+     writeCollectionName()
+     writeFlashcardsNumber(dataDecks);
+     //Escribir Tarjetas vistas
+     //Escribir Número de flashcards
+     
+   }
 
-    // Actualizar el contenido del elemento <a> con el id "collection-name"
-    let collectionNameElement = document.getElementById("collection-name");
-    if (collectionNameElement) {
-        collectionNameElement.textContent = valorDeck;
-    }
-});
 
-document.addEventListener("DOMContentLoaded", function() {
-    //Al cargar la página oculta los botones de acierto o fallo
-    document.getElementById("buttonsResponseContainer").style.display = "none";
-    let selectedDeck = getCookie("deck");
-    dataDecks = cookieToObject("dataDecks");
-    console.log(dataDecks);
-    writeFlashcardsNumber(dataDecks);
 
-    let virginCards = getVirginCardsFromDeck(dataDecks, selectedDeck);
-    let pastCards = getPastCards(dataDecks, selectedDeck);
-    let selectedCards = getCardsFromDeck(dataDecks, selectedDeck);
-    let reviewedNumber = selectedCards.length - virginCards.length - pastCards.length;
-    let cardsForReview = virginCards.concat(pastCards);
-    let queue = queueSortingAlgorithm(cardsForReview);
-    let questionText = getQuestionFromFirst(queue)
-    //Habilitamos el botón de mostrar respuesta cuando haya contenido que mostrar
-    if (queue.length > 0) {
-        document.getElementById("show-answer").disabled = false;
-    }
-    // Actualiza el elemento HTML con el número de tarjetas para revisar
-    let pendingNumberElement = document.getElementById("cards-for-review");
-    pendingNumberElement.textContent = cardsForReview.length;
-
-    // Actualiza el elemento HTML con el número de tarjetas revisadas durante la sesión
-    let reviewedNumberElement = document.getElementById("reviewed-number");
-    reviewedNumberElement.textContent = cardsForReview.length - queue.length;
-
-    let questionTextElement = document.getElementById("question");
-    questionTextElement.textContent = questionText;
-
-    document.getElementById("show-answer").addEventListener("click", function() {
-        // Get the respuesta of the first flashcard in the queue
-        let respuesta = queue[0].respuesta;
-        
-        // Display the respuesta in the HTML
-        document.getElementById("question").textContent = respuesta;
-        //Mostramos los botones de acierto y fallo
-        document.getElementById("buttonsResponseContainer").style.display = "block";
-        // Enable the buttons "acierto" and "fallo"
-        document.getElementById("failure").disabled = false;
-        document.getElementById("success").disabled = false;
-
-    });
-
-     // Add event listener to the "failures" button
-     document.getElementById("failure").addEventListener("click", function() {
-        // Set AT = 0 for the first flashcard in the queue
-        if (queue.length > 0) {
-            queue[0].AT = 30000;
-            queue[0].lastTime = Date.now(); // Set lastTime to current date
-            queue[0].nextTime = queue[0].lastTime + queue[0].AT;
-        }
-        queue = queueSortingAlgorithm(queue);
-    });
-});
 
 

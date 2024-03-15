@@ -27,7 +27,7 @@ function cookieToObject(cookieName) {
     for (let i = 0; i < cookies.length; i++) {
         let cookie = cookies[i].trim();
         if (cookie.indexOf(cookieName + '=') === 0) {
-            console.log("cookie encontrada")
+          
             // Obtener el valor de la cookie y convertirlo de JSON a objeto
             let jsonString = cookie.substring(cookieName.length + 1);
             return JSON.parse(jsonString);

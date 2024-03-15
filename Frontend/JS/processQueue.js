@@ -2,21 +2,21 @@ function queueSortingAlgorithm(array) {
     // Obtenemos la fecha actual en milisegundos
     const currentDate = Date.now();
     
-    // Ordenamos el array en función de la diferencia entre nextTime y la fecha actual
-    array.sort((a, b) => {
-        if (a.nextTime !== null && b.nextTime !== null) {
-            return a.nextTime - currentDate - (b.nextTime - currentDate);
-        } else if (a.nextTime !== null) {
-            return -1;
-        } else if (b.nextTime !== null) {
-            return 1;
-        } else {
-            return 0;
-        }
-    });
+    // Filtramos las tarjetas con lastTime menor que la fecha actual
+    const pastCards = array.filter(card => card.lastTime !== null && card.lastTime < currentDate);
     
-    return array;
+    // Ordenamos las tarjetas pasadas en función de la diferencia entre currentDate y lastTime
+    pastCards.sort((a, b) => a.lastTime - b.lastTime);
+    
+    // Filtramos las tarjetas vírgenes (lastTime y nextTime son nulos)
+    const virginCards = array.filter(card => card.lastTime === null && card.nextTime === null);
+    
+    // Concatenamos las tarjetas pasadas ordenadas y las tarjetas vírgenes
+    const sortedArray = pastCards.concat(virginCards);
+    
+    return sortedArray;
 }
+
 
 /**
  * Returns the text of the "pregunta" field of the first element in the queue.
@@ -29,6 +29,6 @@ function getQuestionFromFirst(queue) {
         // Return the text of the "pregunta" field of the first element in the queue
         return queue[0].pregunta;
     } else {
-        return "The question is empty.";
+        return "You have finished for a while";
     }
 }
