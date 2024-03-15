@@ -133,6 +133,8 @@ function handleNoCardsInQueue() {
   goToMainMenuButton.textContent = "Ir al menú principal";
   goToMainMenuButton.addEventListener("click", function() {
       // Redirigir al usuario a la página principal (index.html)
+      //Actualizamos las cookies
+      updateCookies(dataDecks)
       window.location.href = "index.html";
   });
   buttonsResponseContainer.appendChild(goToMainMenuButton);
@@ -264,6 +266,10 @@ function answerScreen(){
      //Escribir Tarjetas vistas
      //Escribir Número de flashcards
      
+   }
+
+   function updateCookies(dataDecks){
+    setObjectToCookie(dataDecks,"dataDecks");
    }
 
 
