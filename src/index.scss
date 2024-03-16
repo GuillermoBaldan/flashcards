@@ -1,0 +1,28 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+@import url("https://fonts.googleapis.com/css2?family=Anek+Kannada:wght@100..800&display=swap");
+
+$primary-color: #6edab3;
+$secondary-color: #30b988;
+
+body {
+  font-family: "Anek Kannada", sans-serif;
+}
+
+main {
+  padding: 20px;
+  height: 100%;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.shadow-word {
+  text-shadow: 4px 4px 4px $secondary-color;
+}
+
+.subtitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: $secondary-color;
+}
