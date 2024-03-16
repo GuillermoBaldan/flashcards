@@ -45,12 +45,13 @@ function writeFlashcardsToSee(dataDecks,valorDeck){
         }
         
     });
-    console.log(mazoSeleccionado)
+   /*  console.log(mazoSeleccionado) */
     const numberCards2See =  queueSortingAlgorithm(cardsForReview).length;
     cardsToSee.textContent = "" + numberCards2See;
   }
 
   function writeReviewedCards(queue){
+    console.log(cardsForReview)
     const numberCards4Review = cardsForReview.length;
     let numberCards = numberCards4Review - queue.length;
     reviewedNumberCards.textContent = "" + numberCards;
@@ -213,10 +214,10 @@ function successButtonClickHandler() {
   /* console.log("success Button") */
   // Acciones a realizar cuando se pulsa el botón de éxito
   let currentDate = new Date();
-  let elapsedTime = currentDate - queue[0].lastTime; 
+  let elapsedTime = currentDate.getTime() - queue[0].lastTime; 
   queue[0].AT = elapsedTime;
-  queue[0].nextTime = queue[0].AT * 2;
-  queue[0].lastTime = currentDate;
+  queue[0].lastTime = currentDate.getTime();
+  queue[0].nextTime = queue[0].AT * 2 + currentDate.getTime();
   queue = queueSortingAlgorithm(queue);
   writeReviewedCards(queue);
   // Vamos a la pantalla de question
@@ -230,7 +231,7 @@ function failureButtonClickHandler() {
   // Acciones a realizar cuando se pulsa el botón de fracaso
   queue[0].AT = 15000;
   queue[0].nextTime = 30000;
-  queue[0].lastTime = new Date();
+  queue[0].lastTime = (new Date()).getTime();
   queue = queueSortingAlgorithm(queue);
   writeReviewedCards(queue);
   // Vamos a la pantalla de question
