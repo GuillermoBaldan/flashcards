@@ -1,0 +1,75 @@
+{
+  "mazos": [
+    {
+      "titulo": "Mazo de Matemáticas",
+      "flashcards": [
+        {
+          "id": 1,
+          "pregunta": "¿Cuál es el resultado de 2 + 2?",
+          "respuesta": "4",
+          "AT": 0,
+          "lastTime": null,
+          "nextTime": null
+        },
+        {
+          "id": 2,
+          "pregunta": "¿Cuál es la fórmula del área de un círculo?",
+          "respuesta": "πr^2",
+          "AT": 32193000,
+          "lastTime": 1710185265000,
+          "nextTime": 1710249651000
+        },
+        {
+          "id": 3,
+          "pregunta": "¿Cuál es el resultado de 5 * 5?",
+          "respuesta": "25",
+          "AT": 4141563500,
+          "lastTime": 1710182410000,
+          "nextTime": 1718465537000
+        }
+      ]
+    },
+    {
+      "titulo": "Mazo de Historia",
+      "flashcards": [
+        {
+          "id": 4,
+          "pregunta": "¿Quién descubrió América?",
+          "respuesta": "Cristóbal Colón",
+          "AT": 0,
+          "lastTime": null,
+          "nextTime": null
+        },
+        {
+          "id": 5,
+          "pregunta": "¿Cuál fue la primera guerra mundial?",
+          "respuesta": "La Primera Guerra Mundial",
+          "AT": 0,
+          "lastTime": null,
+          "nextTime": null
+        }
+      ]
+    },
+    {
+      "titulo": "Mazo de Ciencias",
+      "flashcards": [
+        {
+          "id": 6,
+          "pregunta": "¿Qué es la fotosíntesis?",
+          "respuesta": "El proceso mediante el cual las plantas convierten la luz solar en energía química para producir su alimento.",
+          "AT": 0,
+          "lastTime": null,
+          "nextTime": null
+        },
+        {
+          "id": 7,
+          "pregunta": "¿Cuál es la estructura básica de una célula?",
+          "respuesta": "La membrana celular, el citoplasma y el núcleo.",
+          "AT": 0,
+          "lastTime": null,
+          "nextTime": null
+        }
+      ]
+    }
+  ]
+}
