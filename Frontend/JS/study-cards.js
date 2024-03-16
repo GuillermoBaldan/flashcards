@@ -1,6 +1,6 @@
 //Declaración de constantes
 const buttonsResponseContainer = document.getElementById("buttonsResponseContainer");
-const showAnswerButton = document.getElementById("show-answer");
+let showAnswerButton = document.getElementById("show-answer");
 const questionTextElement = document.getElementById("question");
 const failureButton = document.getElementById("failure");
 const successButton = document.getElementById("success");
@@ -45,14 +45,16 @@ function writeFlashcardsToSee(dataDecks,valorDeck){
         }
         
     });
-    console.log(mazoSeleccionado)
-    cardsToSee.textContent = "" + mazoSeleccionado.flashcards.length;
+   /*  console.log(mazoSeleccionado) */
+    const numberCards2See =  queueSortingAlgorithm(cardsForReview).length;
+    cardsToSee.textContent = "" + numberCards2See;
   }
 
-  function writeReviewedCards(dataDecks,valorDeck){
-    let numbercards =  getPastCards(dataDecks, valorDeck).length;
-    console.log(numbercards)
-    reviewedNumberCards.textContent = "" + numbercards;
+  function writeReviewedCards(queue){
+    console.log(cardsForReview)
+    const numberCards4Review = cardsForReview.length;
+    let numberCards = numberCards4Review - queue.length;
+    reviewedNumberCards.textContent = "" + numberCards;
   }
 
   function getVirginCardsFromDeck(dataDecks, valorDeck) {
@@ -132,23 +134,67 @@ function handleNoCardsInQueue() {
   goToMainMenuButton.textContent = "Ir al menú principal";
   goToMainMenuButton.addEventListener("click", function() {
       // Redirigir al usuario a la página principal (index.html)
+      //Actualizamos las cookies
+      updateCookies(dataDecks)
       window.location.href = "index.html";
   });
   buttonsResponseContainer.appendChild(goToMainMenuButton);
 }
 
+// Define la función manejadora del evento para el botón showAnswerButton
+function showAnswerButtonClickHandler() {
+  answerScreen();
+  
+}
+
+
+// Función para remover el event listener del botón showAnswerButton
+function removeShowAnswerButtonEventListener() {
+  console.log("removeShowAnswerButtonEven")
+  console.log(showAnswerButton)
+  console.log(showAnswerButton.removeEventListener('click', showAnswerButtonClickHandler));
+}
+
 function questionScreen() {
   questionText = getQuestionFromFirst(queue);
-  if (queue.length!=0){
+  if (queue.length != 0) {
     questionTextElement.textContent = questionText;
     showAnswerButton.style.display = "block";
+    showAnswerButton.disabled = false; // Habilitar el botón showAnswerButton
     failureButton.style.display = "none"; // Desaparecer botón de fallo
     successButton.style.display = "none"; // Desaparecer botón de bien
-  }else{
-    console.log("sin cola")
+    
+    // Agregar event listener para el botón showAnswerButton
+    showAnswerButton.addEventListener('click', function(){
+      
+      showAnswerButtonClickHandler();
+      
+    });
+   } else {
+    console.log("sin cola");
     handleNoCardsInQueue();
   }
 }
+
+function questionScreen() {
+
+  questionText = getQuestionFromFirst(queue);
+  if (queue.length != 0) {
+    questionTextElement.textContent = questionText;
+    showAnswerButton.style.display = "block";
+    showAnswerButton.disabled = false; // Habilitar el botón showAnswerButton
+    failureButton.style.display = "none"; // Desaparecer botón de fallo
+    successButton.style.display = "none"; // Desaparecer botón de bien
+    
+    // Agregar event listener para el botón showAnswerButton
+    showAnswerButton.addEventListener('click', showAnswerButtonClickHandler)
+
+  } else {
+    console.log("sin cola");
+    handleNoCardsInQueue();
+  }
+}
+
 
 
     // Función para obtener el valor de una cookie por su nombre
@@ -163,16 +209,56 @@ function questionScreen() {
       return "";
   }
 
-  function answerScreen(){
-    console.log("pantalla de mostrar respuesta")
-    answer = queue[0].respuesta;
-    questionTextElement.textContent = answer;
-    buttonsResponseContainer.style.display = "block";
-    failureButton.disabled = false;
-    successButton.disabled = false;
-    showAnswerButton.style.display = "none"; // Haz desaparecer el botón de mostrar respuesta
-   }
+  // Define los event listeners como funciones separadas
+function successButtonClickHandler() {
+  /* console.log("success Button") */
+  // Acciones a realizar cuando se pulsa el botón de éxito
+  let currentDate = new Date();
+  let elapsedTime = currentDate.getTime() - queue[0].lastTime; 
+  queue[0].AT = elapsedTime;
+  queue[0].lastTime = currentDate.getTime();
+  queue[0].nextTime = queue[0].AT * 2 + currentDate.getTime();
+  queue = queueSortingAlgorithm(queue);
+  writeReviewedCards(queue);
+  // Vamos a la pantalla de question
+  questionScreen();
+  // Eliminar los event listeners una vez que se han activado
+  successButton.removeEventListener('click', successButtonClickHandler);
+  
+}
 
+function failureButtonClickHandler() {
+  // Acciones a realizar cuando se pulsa el botón de fracaso
+  queue[0].AT = 15000;
+  queue[0].nextTime = 30000;
+  queue[0].lastTime = (new Date()).getTime();
+  queue = queueSortingAlgorithm(queue);
+  writeReviewedCards(queue);
+  // Vamos a la pantalla de question
+  questionScreen();
+  failureButton.removeEventListener('click', failureButtonClickHandler);
+}
+
+function answerScreen(){
+  console.log("mostrar respuesta");
+  answer = queue[0].respuesta;
+  questionTextElement.textContent = answer;
+  buttonsResponseContainer.style.display = "block";
+  failureButton.disabled = false;
+  successButton.disabled = false;
+  buttonsResponseContainer.style.display = "flex";
+  failureButton.style.display = "block";
+  successButton.style.display = "block";
+  showAnswerButton.style.display = "none"; 
+
+  // Agregar event listener para el botón successButton
+  successButton.addEventListener('click', successButtonClickHandler);
+  
+  // Agregar event listener para el botón failureButton
+  failureButton.addEventListener('click', failureButtonClickHandler);
+
+  
+}
 
    function showInformationPannel(){
     //Escribir Nombre de colección
@@ -181,6 +267,10 @@ function questionScreen() {
      //Escribir Tarjetas vistas
      //Escribir Número de flashcards
      
+   }
+
+   function updateCookies(dataDecks){
+    setObjectToCookie(dataDecks,"dataDecks");
    }
 
 
