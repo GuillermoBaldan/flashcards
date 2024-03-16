@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Flashcards</title>
+    <link rel="stylesheet" href="./Style/add-card.css">
+</head>
+<body>
+    <h2 id="deck-name">Nombre mazo</h2>
+    <h2>Crear nueva tarjeta de flashcard</h2>
+    <form id="flashcard-form">
+        <div>
+            <label for="question">Pregunta (Anverso):</label><br>
+            <textarea id="question" name="question" required></textarea>
+        </div>
+        <br>
+        <div>
+            <label for="answer">Respuesta (Reverso):</label><br>
+            <textarea id="answer" name="answer" required></textarea>
+        </div>
+        <br>
+        <button type="submit">Crear Flashcard</button>
+    </form>
+
+    <script src="./JS/cookiesManagement.js"></script>
+    <script src="./JS/add-card.js"></script>
+</body>
+</html>
