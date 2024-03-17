@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, ReactNode } from "react";
 import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
-import Menu from "./Menu/Menu/Menu";
+import Menu from "./Menu/Menu";
 
 interface LayoutProps {
   children: ReactNode;

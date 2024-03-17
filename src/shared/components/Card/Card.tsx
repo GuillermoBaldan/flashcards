@@ -1,10 +1,20 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import "./Card.scss";
+import { CardProps } from "@types";
 
-interface CardProps {
-  children: ReactNode;
-}
+const Card: React.FC<CardProps> = ({ isSelected, children }) => {
+  const truncatedText =
+    children.length > 55 && !isSelected
+      ? `${children.slice(0, 55)}...`
+      : children;
 
-export default function Card({ children }: CardProps) {
-  return <div className="Card h-100 py-4 px-5">{children}</div>;
-}
+  return (
+    <div
+      className={`Card text-center h-100 fs-5 p-3 ${isSelected ? "isSelected" : ""}`}
+    >
+      {truncatedText}
+    </div>
+  );
+};
+
+export default Card;

@@ -3,6 +3,7 @@
 
 $primary-color: #6edab3;
 $secondary-color: #30b988;
+$tertiary-color: #258d5e;
 
 body {
   font-family: "Anek Kannada", sans-serif;
@@ -11,6 +12,7 @@ body {
 main {
   padding: 20px;
   height: 100%;
+  background-color: white;
 }
 
 .clickable {
@@ -23,6 +25,7 @@ main {
 
 .subtitle {
   font-size: 2rem;
+  margin-bottom: 20px;
   font-weight: bold;
   color: $secondary-color;
 }

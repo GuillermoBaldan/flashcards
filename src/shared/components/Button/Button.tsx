@@ -1,14 +1,9 @@
-// Button.tsx
 import React, { ReactNode, useState } from "react";
 import "./Button.scss";
 import { Button as BsButton } from "react-bootstrap";
+import { ButtonProps } from "@types";
 
-export interface ButtonProps {
-  onClick?: () => void;
-  children: ReactNode;
-}
-
-const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
+const Button: React.FC<ButtonProps> = ({ className, onClick, children }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
@@ -30,6 +25,7 @@ const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
 
   return (
     <BsButton
+      className={`${className} custom-button`}
       onMouseUp={handleMouseUp}
       onMouseDown={handleMouseDown}
       onMouseEnter={handleMouseEnter}

@@ -1,0 +1,11 @@
+.mazo-cartas {
+  .card-wrapper {
+    position: absolute;
+    z-index: 1;
+    margin-top: -40px;
+  }
+
+  .card-wrapper:first-of-type {
+    margin-top: 0;
+  }
+}

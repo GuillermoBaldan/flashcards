@@ -4,4 +4,25 @@
   border: 3px solid $secondary-color;
   border-radius: 30px;
   box-shadow: 5px 5px 5px rgba(63, 63, 63, 0.349);
+  background-color: white;
+
+  &:hover {
+    background-color: $secondary-color;
+    color: white;
+    border: 3px solid $secondary-color;
+  }
+
+  &.active,
+  &:focus-visible,
+  &:focus {
+    background-color: $tertiary-color !important;
+    color: white;
+    border: 3px solid $tertiary-color !important;
+  }
+
+  &.isSelected {
+    background-color: $secondary-color !important;
+    color: white;
+    border: 3px solid $secondary-color !important;
+  }
 }

@@ -9,6 +9,7 @@ export default defineConfig({
     alias: {
       "@components": path.resolve(__dirname, "./src/shared/components"),
       "@utils": path.resolve(__dirname, "./src/shared/utils/"),
+      "@types": path.resolve(__dirname, "./src/shared/types/index.ts"),
       "@scss": path.resolve(__dirname, "./src/index.scss"),
     },
   },

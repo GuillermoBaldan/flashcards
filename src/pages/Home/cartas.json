@@ -1,0 +1,66 @@
+{
+  "javae": [
+    {
+      "id": 1,
+      "question": "Contenido de la primera carta Contenido de la primera carta Contenido de la primera carta ",
+      "answers": {
+        "1": "si",
+        "2": "si",
+        "3": "si",
+        "4": "si"
+      },
+      "correctAnswer": "3"
+    }
+  ],
+  "java": [
+    {
+      "id": 1,
+      "question": "Contenido de la primera carta Contenido de la primera carta Contenido de la primera carta ",
+      "answers": {
+        "1": "si",
+        "2": "si",
+        "3": "si",
+        "4": "si"
+      },
+      "correctAnswer": "3"
+    },
+    {
+      "id": 6,
+      "question": "Contenido de la primera carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 7,
+      "question": "Contenido de la segunda carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 8,
+      "question": "Contenido de la tercera carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 9,
+      "question": "Contenido de la cuarta carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 10,
+      "question": "Contenido de la quinta carta Contenido de la primera carta Contenido de la primera carta "
+    }
+  ],
+  "ingles": [
+    {
+      "id": 2,
+      "question": "Contenido de la segunda carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 3,
+      "question": "Contenido de la tercera carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 4,
+      "question": "Contenido de la cuarta carta Contenido de la primera carta Contenido de la primera carta "
+    },
+    {
+      "id": 5,
+      "question": "Contenido de la quinta carta Contenido de la primera carta Contenido de la primera carta "
+    }
+  ]
+}
