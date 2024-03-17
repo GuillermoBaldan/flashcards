@@ -8,6 +8,7 @@ import {
   faSquarePlus,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Menu.scss";
+import { addCard } from "@services/cardService";
 
 const Menu = () => {
   return (
@@ -45,6 +46,7 @@ const Menu = () => {
           size="2xl"
           icon={faSquarePlus}
           inverse
+          onClick={addCard}
         />
       </div>
     </aside>
