@@ -13,24 +13,24 @@ import {
   ApiOperation,
   ApiParam,
   ApiBody,
-} from '@nestjs/swagger'; // Importa los decoradores de Swagger
+} from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
 @Controller('users')
-@ApiTags('users') // Etiqueta de la API
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiBody({ type: CreateUserDto }) // Decorador para especificar el cuerpo de la solicitud
+  @ApiBody({ type: CreateUserDto })
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created',
-    type: User, // Tipo de respuesta esperada
+    type: User,
   })
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
