@@ -1,5 +1,8 @@
 # Usa una imagen de Node.js como base
-FROM node:18-alpine
+FROM node:18
+
+# Crea el directorio de trabajo
+RUN mkdir -p /usr/src/app 
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /usr/src/app
@@ -11,8 +14,11 @@ COPY dist/ ./dist/
 # Instala las dependencias
 RUN npm install
 
+# Copia el resto de los archivos y el directorio de trabajo
+COPY . .
+
 # Expone el puerto 3000
 EXPOSE 3000
 
-# Comando para ejecutar la aplicación
-CMD ["node", "dist/main.js"]
+# Comando para ejecutar la aplicación en modo de desarrollo
+CMD ["npm", "run", "start:dev"]

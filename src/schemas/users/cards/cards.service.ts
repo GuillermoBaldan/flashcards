@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCardDto } from './dto/create-card.dto/create-card.dto';
 import { Card } from './models/cards.model';
-import { createSHA256Hash } from '../../helpers/hash.helper';
+import { createSHA256Hash } from 'src/helpers/hash.helper';
 
 @Injectable()
 export class CardsService {

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './schemas/users/users.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27018/flashcardsDB'),
+    MongooseModule.forRoot('mongodb://admintres:admintres@mongo_db:27017/'),
     UsersModule,
   ],
   controllers: [],

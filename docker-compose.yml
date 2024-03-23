@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  api:
+    container_name: 'api'
+    restart: always
+    build: .
+    ports:
+      - '3000:3000'
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - flashcards-network
+
+  mongo_db:
+    container_name: 'mongo_db'
+    image: mongo:latest
+    logging:
+      driver: none
+    ports:
+      - '27030:27017'
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admintres
+      - MONGO_INITDB_ROOT_PASSWORD=admintres
+    env_file:
+      - .env
+    networks:
+      - flashcards-network
+
+networks:
+  flashcards-network:
+    driver: bridge
