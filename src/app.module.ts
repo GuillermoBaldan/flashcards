@@ -1,13 +1,36 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersModule } from './schemas/users/users.module';
+import { DecksModule } from './modules/decks/decks.module';
+import { CardsModule } from './modules/cards/cards.module';
+import { AuthModule } from './auth/auth.module';
+import { AuthMiddleware } from './middlewares/auth.middleware';
+import { AuthService } from './auth/services/auth.service';
+import { UsersService } from './services/users.service';
+import { UserModel } from './modules/users/entities/user.entity';
+import { routes, RouteConfig } from './config/routes';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb://admintres:admintres@mongo_db:27017/'),
-    UsersModule,
+    DecksModule,
+    CardsModule,
+    AuthModule,
+    UserModel,
   ],
-  controllers: [],
-  providers: [],
+  providers: [AuthService, UsersService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    routes.forEach((route: RouteConfig) => {
+      if (route.requiresAuth) {
+        const excludedMethods = route.excludeFromAuth || [];
+        consumer
+          .apply(AuthMiddleware)
+          .exclude(
+            ...excludedMethods.map((method) => ({ method, path: route.path })),
+          )
+          .forRoutes(route.path);
+      }
+    });
+  }
+}

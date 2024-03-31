@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/usr/src/app
     networks:
-      - flashcards-network
+      - network
 
   mongo_db:
     container_name: 'mongo_db'
@@ -27,8 +27,8 @@ services:
     env_file:
       - .env
     networks:
-      - flashcards-network
+      - network
 
 networks:
-  flashcards-network:
+  network:
     driver: bridge
