@@ -9,7 +9,25 @@ import { CreateUserDto } from 'src/modules/users/dto/create-user.dto';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<void> {
+    const existingUser = await this.userModel
+      .findOne({
+        $or: [
+          { email: createUserDto.email },
+          { username: createUserDto.username },
+        ],
+      })
+      .exec();
+
+    if (existingUser) {
+      if (existingUser.email === createUserDto.email) {
+        throw new BadRequestException('Email already exists');
+      }
+      if (existingUser.username === createUserDto.username) {
+        throw new BadRequestException('Username already exists');
+      }
+    }
+
     const hashedPassword = await PasswordHelper.hashPassword(
       createUserDto.password,
     );
@@ -17,7 +35,7 @@ export class UsersService {
       ...createUserDto,
       password: hashedPassword,
     });
-    return createdUser.save();
+    await createdUser.save();
   }
 
   async findAll(): Promise<User[]> {

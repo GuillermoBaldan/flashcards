@@ -9,6 +9,7 @@ import { Deck, DeckDocument } from '../modules/decks/entities/deck.entity';
 import { UsersService } from './users.service';
 import { CreateDeckDto } from '../modules/decks/dto/create-deck.dto';
 import { UpdateDeckDto } from '../modules/decks/dto/update-deck.dto';
+import { ERROR_MESSAGES } from '../errors/error-messages';
 
 @Injectable()
 export class DecksService {
@@ -23,10 +24,13 @@ export class DecksService {
       throw new NotFoundException('User not found');
     }
 
-    const createdDeck = new this.deckModel({ ...createDeckDto, userId });
-    const deck = await createdDeck.save();
+    const newDeck = new this.deckModel({
+      ...createDeckDto,
+      userId,
+    });
+    const deck = await newDeck.save();
 
-    await this.usersService.addDeckToUser(userId, deck._id);
+    await this.usersService.addDeckToUser(userId, deck._id.toString());
 
     return deck;
   }
@@ -65,14 +69,16 @@ export class DecksService {
   private async findDeckById(id: string): Promise<Deck> {
     const deck = await this.deckModel.findById(id);
     if (!deck) {
-      throw new NotFoundException('Deck not found');
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
     }
     return deck;
   }
 
   private checkDeckOwnership(deck: Deck, userId: string): void {
     if (deck.userId !== userId) {
-      throw new BadRequestException('Unauthorized access to deck');
+      throw new BadRequestException(
+        ERROR_MESSAGES.UNAUTHORIZED_DECK_ACCESS.message,
+      );
     }
   }
 

@@ -17,6 +17,7 @@ import { UsersService } from '../../services/users.service';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 import { isEmail } from 'class-validator';
 import { Request } from 'express';
+import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
 @Controller('users')
 @ApiTags('users')
@@ -29,14 +30,17 @@ export class UsersController {
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created',
-    type: User,
   })
   @UseInterceptors(AuthMiddleware)
-  async create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async create(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<{ message: string }> {
     const { email } = createUserDto;
 
     if (!isEmail(email)) {
-      throw new BadRequestException('Invalid email format');
+      throw new BadRequestException(
+        ERROR_MESSAGES.INVALID_EMAIL_FORMAT.message,
+      );
     }
 
     const existingUser = await this.usersService.findByEmail(
@@ -44,10 +48,14 @@ export class UsersController {
     );
 
     if (existingUser) {
-      throw new BadRequestException('Email already exists');
+      throw new BadRequestException(
+        ERROR_MESSAGES.EMAIL_ALREADY_EXISTS.message,
+      );
     }
 
-    return this.usersService.create(createUserDto);
+    await this.usersService.create(createUserDto);
+
+    return { message: 'Usuario creado exitosamente' };
   }
 
   @Get('all')

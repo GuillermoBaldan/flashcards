@@ -7,7 +7,7 @@ import { User } from 'src/modules/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
-  private readonly JWT_SECRET = 'your_secret_key';
+  private readonly JWT_SECRET = '3x@mpl3_S3cr3t_K3y_!@#_2025';
 
   constructor(private readonly usersService: UsersService) {}
 

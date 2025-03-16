@@ -17,6 +17,7 @@ import { LoginDto } from '../dto/login.dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { User } from 'src/modules/users/entities/user.entity';
 import { Response } from 'express';
+import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
 @Controller('login')
 @ApiTags('login')
@@ -33,15 +34,34 @@ export class LoginController {
     const user: User = await this.authService.validateUser(email, password);
     if (!user) {
       throw new HttpException(
-        'Invalid email or password',
-        HttpStatus.BAD_REQUEST,
+        ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message,
+        ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.code,
       );
     }
 
     const payload: JwtPayload = { id: user._id, email: user.email };
     const token = this.authService.generateToken(payload);
 
-    res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+      maxAge: 3600000,
+    });
+    res.status(HttpStatus.OK).send();
+  }
+
+  @Post('logout')
+  @ApiOperation({ summary: 'Logout user' })
+  @ApiResponse({ status: 200, description: 'Logout successful' })
+  async logout(@Res() res: Response): Promise<void> {
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
     res.status(HttpStatus.OK).send();
   }
 }

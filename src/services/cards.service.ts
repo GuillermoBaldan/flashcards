@@ -9,6 +9,7 @@ import { CreateCardDto } from '../modules/cards/dto/create-card.dto';
 import { UpdateCardDto } from '../modules/cards/dto/update-card.dto';
 import { Card, CardDocument } from 'src/modules/cards/entities/cards.entity';
 import { DecksService } from './decks.service';
+import { ERROR_MESSAGES } from '../errors/error-messages';
 
 @Injectable()
 export class CardsService {
@@ -26,7 +27,10 @@ export class CardsService {
     });
     const savedCard = await newCard.save();
 
-    await this.decksService.addCardToDeck(createCardDto.deckId, savedCard._id);
+    await this.decksService.addCardToDeck(
+      createCardDto.deckId,
+      savedCard._id.toString(),
+    );
 
     return savedCard;
   }
@@ -67,7 +71,9 @@ export class CardsService {
 
   private checkCardOwnership(card: Card, userId: string): void {
     if (card.userId !== userId) {
-      throw new BadRequestException('Unauthorized access to card');
+      throw new BadRequestException(
+        ERROR_MESSAGES.UNAUTHORIZED_CARD_ACCESS.message,
+      );
     }
   }
 }
