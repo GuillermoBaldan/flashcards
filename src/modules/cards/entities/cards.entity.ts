@@ -4,25 +4,42 @@ import { Document } from 'mongoose';
 @Schema()
 export class Card {
   @Prop({ required: true })
-  question: string;
+  front: string;
 
   @Prop({ required: true })
-  answer: string;
+  back: string;
 
   @Prop({ required: true })
-  AT: number;
-
-  @Prop({ required: true })
-  lastTime: Date;
-
-  @Prop({ required: true })
-  nextTime: Date;
+  deckId: string;
 
   @Prop({ required: true })
   userId: string;
 
   @Prop({ required: true })
-  deckId: string;
+  cardType: string;
+
+  @Prop({ required: true, default: 0 })
+  AT: number;
+
+  @Prop({ required: true, default: Date.now })
+  lastTime: Date;
+
+  @Prop({ required: true, default: Date.now })
+  nextTime: Date;
+
+  @Prop({ type: Object })
+  gameOptions: {
+    addIncorrect: boolean;
+    answerFourOptions: boolean;
+    askFront: boolean;
+    askSide: boolean;
+    beHonest: boolean;
+    dailyTest: boolean;
+    guessAnswer: boolean;
+    riddle: boolean;
+    trueFalse: boolean;
+    incorrectAnswers?: string[];
+  };
 }
 
 export type CardDocument = Card & Document;

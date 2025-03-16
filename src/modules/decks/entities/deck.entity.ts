@@ -4,7 +4,10 @@ import { Document } from 'mongoose';
 @Schema()
 export class Deck {
   @Prop({ required: true })
-  title: string;
+  name: string;
+
+  @Prop({ required: true })
+  color: string;
 
   @Prop({ type: [{ type: String, ref: 'idCard' }] })
   cards_id: string[];

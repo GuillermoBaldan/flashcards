@@ -7,6 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Deck, DeckDocument } from '../modules/decks/entities/deck.entity';
 import { UsersService } from './users.service';
+import { ReadDeckDto } from '../modules/decks/dto/read-deck.dto';
 import { CreateDeckDto } from '../modules/decks/dto/create-deck.dto';
 import { UpdateDeckDto } from '../modules/decks/dto/update-deck.dto';
 import { ERROR_MESSAGES } from '../errors/error-messages';
@@ -18,7 +19,10 @@ export class DecksService {
     private readonly usersService: UsersService,
   ) {}
 
-  async create(createDeckDto: CreateDeckDto, userId: string): Promise<Deck> {
+  async create(
+    createDeckDto: CreateDeckDto,
+    userId: string,
+  ): Promise<ReadDeckDto> {
     const user = await this.usersService.findOne(userId);
     if (!user) {
       throw new NotFoundException('User not found');
@@ -32,17 +36,33 @@ export class DecksService {
 
     await this.usersService.addDeckToUser(userId, deck._id.toString());
 
-    return deck;
+    return {
+      id: deck._id.toString(),
+      name: deck.name,
+      color: deck.color,
+      cards_count: deck.cards_id?.length || 0,
+    };
   }
 
-  async findByUserId(userId: string): Promise<Deck[]> {
-    return this.deckModel.find({ userId }).exec();
+  async findByUserId(userId: string): Promise<ReadDeckDto[]> {
+    const decks = await this.deckModel.find({ userId }).exec();
+    return decks.map((deck) => ({
+      id: deck._id.toString(),
+      name: deck.name,
+      color: deck.color,
+      cards_count: deck.cards_id?.length || 0,
+    }));
   }
 
-  async findOne(id: string, userId: string): Promise<Deck> {
+  async findOne(id: string, userId: string): Promise<ReadDeckDto> {
     const deck = await this.findDeckById(id);
     this.checkDeckOwnership(deck, userId);
-    return deck;
+    return {
+      id: id,
+      name: deck.name,
+      color: deck.color,
+      cards_count: deck.cards_id?.length || 0,
+    };
   }
 
   async remove(id: string, userId: string): Promise<void> {
@@ -60,10 +80,22 @@ export class DecksService {
     id: string,
     updateDeckDto: UpdateDeckDto,
     userId: string,
-  ): Promise<Deck> {
+  ): Promise<ReadDeckDto> {
     const deck = await this.findDeckById(id);
     this.checkDeckOwnership(deck, userId);
-    return this.deckModel.findByIdAndUpdate(id, updateDeckDto, { new: true });
+
+    const updatedDeck = await this.deckModel.findByIdAndUpdate(
+      id,
+      updateDeckDto,
+      { new: true },
+    );
+
+    return {
+      id: updatedDeck._id.toString(),
+      name: updatedDeck.name,
+      color: updatedDeck.color,
+      cards_count: updatedDeck.cards_id?.length || 0,
+    };
   }
 
   private async findDeckById(id: string): Promise<Deck> {

@@ -8,8 +8,14 @@ export class UpdateDeckDto {
   id: string;
 
   @ApiProperty({
-    description: 'Nuevo título del mazo',
+    description: 'Nuevo nombre del mazo',
     example: 'Updated Math Deck',
   })
-  title: string;
+  name?: string;
+
+  @ApiProperty({
+    description: 'Nuevo color del mazo',
+    example: '#00FF00',
+  })
+  color?: string;
 }

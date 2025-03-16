@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ReadCardDto } from '../modules/cards/dto/read-card.dto';
 import { CreateCardDto } from '../modules/cards/dto/create-card.dto';
 import { UpdateCardDto } from '../modules/cards/dto/update-card.dto';
 import { Card, CardDocument } from 'src/modules/cards/entities/cards.entity';
@@ -18,12 +19,18 @@ export class CardsService {
     private readonly decksService: DecksService,
   ) {}
 
-  async create(createCardDto: CreateCardDto, userId: string): Promise<Card> {
+  async create(
+    createCardDto: CreateCardDto,
+    userId: string,
+  ): Promise<ReadCardDto> {
     await this.decksService.verifyDeckOwnership(createCardDto.deckId, userId);
 
     const newCard = new this.cardModel({
       ...createCardDto,
       userId,
+      AT: 0,
+      lastTime: new Date(),
+      nextTime: new Date(),
     });
     const savedCard = await newCard.save();
 
@@ -32,7 +39,33 @@ export class CardsService {
       savedCard._id.toString(),
     );
 
-    return savedCard;
+    return {
+      id: savedCard._id.toString(),
+      front: savedCard.front,
+      back: savedCard.back,
+      deckId: savedCard.deckId,
+      cardType: savedCard.cardType,
+      gameOptions: savedCard.gameOptions,
+      AT: savedCard.AT,
+      lastTime: savedCard.lastTime,
+      nextTime: savedCard.nextTime,
+    };
+  }
+
+  async findByDeckId(deckId: string, userId: string): Promise<ReadCardDto[]> {
+    await this.decksService.verifyDeckOwnership(deckId, userId);
+    const cards = await this.cardModel.find({ deckId }).exec();
+    return cards.map((card) => ({
+      id: card._id.toString(),
+      front: card.front,
+      back: card.back,
+      deckId: card.deckId,
+      cardType: card.cardType,
+      gameOptions: card.gameOptions,
+      AT: card.AT,
+      lastTime: card.lastTime,
+      nextTime: card.nextTime,
+    }));
   }
 
   async findOne(id: string, userId: string): Promise<Card> {

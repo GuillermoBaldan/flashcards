@@ -8,21 +8,20 @@ export class ReadDeckDto {
   id: string;
 
   @ApiProperty({
-    description: 'Title of the deck',
+    description: 'Name of the deck',
     example: 'Math Deck',
   })
-  title: string;
+  name: string;
 
   @ApiProperty({
-    description: 'User ID who owns the deck',
-    example: '6609bb251e4a90522ebe6ed2',
+    description: 'Color of the deck',
+    example: '#FF0000',
   })
-  userId: string;
+  color: string;
 
   @ApiProperty({
-    description: 'List of card IDs in the deck',
-    type: [String],
-    example: ['6609bb441e4a90522ebe6ed9'],
+    description: 'Number of cards in the deck',
+    example: 5,
   })
-  cards: string[];
+  cards_count: number;
 }

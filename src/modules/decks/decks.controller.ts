@@ -16,9 +16,9 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
+import { ReadDeckDto } from './dto/read-deck.dto';
 import { CreateDeckDto } from './dto/create-deck.dto';
 import { UpdateDeckDto } from './dto/update-deck.dto';
-import { Deck } from './entities/deck.entity';
 import { DecksService } from 'src/services/decks.service';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
 import { Request } from 'express';
@@ -34,13 +34,13 @@ export class DecksController {
   @ApiResponse({
     status: 201,
     description: 'The deck has been successfully created',
-    type: Deck,
+    type: ReadDeckDto,
   })
   @UseInterceptors(AuthMiddleware)
   async create(
     @Body() createDeckDto: CreateDeckDto,
     @Req() req: Request,
-  ): Promise<Deck> {
+  ): Promise<ReadDeckDto> {
     const userId = req.user.id;
     return this.decksService.create(createDeckDto, userId);
   }
@@ -55,9 +55,12 @@ export class DecksController {
   @ApiResponse({
     status: 200,
     description: 'The deck has been successfully retrieved',
-    type: Deck,
+    type: ReadDeckDto,
   })
-  async findOne(@Param('id') id: string, @Req() req: Request): Promise<Deck> {
+  async findOne(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<ReadDeckDto> {
     const userId = req.user.id;
     return this.decksService.findOne(id, userId);
   }
@@ -67,10 +70,11 @@ export class DecksController {
   @ApiResponse({
     status: 200,
     description: 'List of decks',
-    type: [Deck],
+    type: ReadDeckDto,
+    isArray: true,
   })
   @UseInterceptors(AuthMiddleware)
-  async findAllByUser(@Req() req: Request): Promise<Deck[]> {
+  async findAllByUser(@Req() req: Request): Promise<ReadDeckDto[]> {
     const userId = req.user.id;
     return this.decksService.findByUserId(userId);
   }
@@ -86,14 +90,14 @@ export class DecksController {
   @ApiResponse({
     status: 200,
     description: 'The deck has been successfully updated',
-    type: Deck,
+    type: ReadDeckDto,
   })
   @UseInterceptors(AuthMiddleware)
   async update(
     @Param('id') id: string,
     @Body() updateDeckDto: UpdateDeckDto,
     @Req() req: Request,
-  ): Promise<Deck> {
+  ): Promise<ReadDeckDto> {
     const userId = req.user.id;
     return this.decksService.update(id, updateDeckDto, userId);
   }

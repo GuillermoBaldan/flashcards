@@ -1,36 +1,51 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ReadCardDto {
-  @ApiProperty({ description: 'The ID of the card', example: '1' })
+  @ApiProperty({
+    description: 'ID of the card',
+    example: '609b5b65b20e14655c949a8e',
+  })
   id: string;
 
   @ApiProperty({
-    description: 'The question of the card',
-    example: 'What is 2+2?',
+    description: 'Front content of the card',
   })
-  question: string;
+  front: string;
 
-  @ApiProperty({ description: 'The answer of the card', example: '4' })
-  answer: string;
+  @ApiProperty({
+    description: 'Back content of the card',
+  })
+  back: string;
 
-  @ApiProperty({ description: 'The AT of the card', example: 3 })
+  @ApiProperty({
+    description: 'Deck ID of the card',
+    example: '609b5b65b20e14655c949a8e',
+  })
+  deckId: string;
+
+  @ApiProperty({
+    description: 'Type of card',
+  })
+  cardType: string;
+
+  @ApiProperty({
+    description: 'Game options',
+  })
+  gameOptions: object;
+
+  @ApiProperty({
+    description: 'Attempts count',
+    example: 0,
+  })
   AT: number;
 
   @ApiProperty({
-    description: 'The last time of the card',
-    example: '2024-03-24T12:00:00.000Z',
+    description: 'Last review time',
   })
   lastTime: Date;
 
   @ApiProperty({
-    description: 'The next time of the card',
-    example: '2024-03-24T12:00:00.000Z',
+    description: 'Next review time',
   })
   nextTime: Date;
-
-  @ApiProperty({
-    description: 'The ID of the deck',
-    example: '609b5b65b20e14655c949a8e',
-  })
-  deckId: string;
 }
