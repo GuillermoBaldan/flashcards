@@ -14,4 +14,5 @@ export const routes: RouteConfig[] = [
   { path: '/decks/:deck_id', requiresAuth: true },
   { path: '/cards', requiresAuth: true },
   { path: '/cards/:card_id', requiresAuth: true },
+  { path: '/logout', requiresAuth: false },
 ];
