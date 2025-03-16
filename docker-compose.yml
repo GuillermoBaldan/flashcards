@@ -21,7 +21,7 @@ services:
       driver: none
     command: mongod --quiet --logpath /dev/null
     ports:
-      - '${MONGO_PORT}:${MONGO_INTERNAL_PORT}'
+      - '${MONGO_LOCAL_PORT}:${MONGO_INTERNAL_PORT}'
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
@@ -33,13 +33,15 @@ services:
 
   mongo_backup:
     image: mongo:latest
+    logging:
+      driver: none
     depends_on:
       - mongo_db
     volumes:
       - ./mongo_backups:/backup
     entrypoint: >
       /bin/sh -c "while true; do
-        mongodump --host mongo_db --username ${MONGO_INITDB_ROOT_USERNAME} --password ${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --out /backup/latest;
+        mongodump --quiet --host mongo_db --username ${MONGO_INITDB_ROOT_USERNAME} --password ${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --out /backup/latest;
         sleep 5;
       done"
     networks:
