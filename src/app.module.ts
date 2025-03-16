@@ -11,7 +11,9 @@ import { routes, RouteConfig } from './config/routes';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://admintres:admintres@mongo_db:27017/'),
+    MongooseModule.forRoot(
+      `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`,
+    ),
     DecksModule,
     CardsModule,
     AuthModule,

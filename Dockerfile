@@ -16,8 +16,8 @@ RUN npm install
 # Copia el resto de los archivos y el directorio de trabajo
 COPY . .
 
-# Expone el puerto 3000
-EXPOSE 3000
+# Expone el puerto interno de la API
+EXPOSE ${API_INTERNAL_PORT}
 
 # Comando para ejecutar la aplicación en modo de desarrollo
 CMD ["npm", "run", "start:dev"]

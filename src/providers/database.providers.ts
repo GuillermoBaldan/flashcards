@@ -6,7 +6,7 @@ export const databaseProviders = [
     useFactory: async () => {
       try {
         const connection = await mongoose.connect(
-          'mongodb://admin:admin@localhost:27030/admin',
+          `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`,
         );
         console.log('Connected to MongoDB');
         return connection;

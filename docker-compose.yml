@@ -6,7 +6,7 @@ services:
     restart: always
     build: .
     ports:
-      - '3000:3000'
+      - '${API_PORT}:${API_INTERNAL_PORT}'
     env_file:
       - .env
     volumes:
@@ -21,14 +21,27 @@ services:
       driver: none
     command: mongod --quiet --logpath /dev/null
     ports:
-      - '27030:27017'
+      - '${MONGO_PORT}:${MONGO_INTERNAL_PORT}'
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admintres
-      - MONGO_INITDB_ROOT_PASSWORD=admintres
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     env_file:
       - .env
+    networks:
+      - network
+
+  mongo_backup:
+    image: mongo:latest
+    depends_on:
+      - mongo_db
     volumes:
-      - ./mongo_data:/data/db
+      - ./mongo_backups:/backup
+    entrypoint: >
+      /bin/sh -c "while true; do
+        mongodump --host mongo_db --username ${MONGO_INITDB_ROOT_USERNAME} --password ${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --out /backup/latest;
+        sleep 5;
+      done"
     networks:
       - network
 
