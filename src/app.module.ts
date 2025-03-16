@@ -9,6 +9,7 @@ import { AuthService } from './auth/services/auth.service';
 import { UsersService } from './services/users.service';
 import { UserModel } from './modules/users/entities/user.entity';
 import { routes, RouteConfig } from './config/routes';
+import { SanitizeMiddleware } from './middlewares/sanitize.middleware';
 
 @Module({
   imports: [
@@ -62,5 +63,7 @@ export class AppModule implements NestModule {
           .forRoutes(route.path);
       }
     });
+
+    consumer.apply(SanitizeMiddleware).forRoutes('cards');
   }
 }

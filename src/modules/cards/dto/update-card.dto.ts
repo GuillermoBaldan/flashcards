@@ -1,37 +1,48 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
 export class UpdateCardDto {
   @ApiProperty({
-    description: 'The question of the card',
-    example: 'What is 2+2?',
+    description: 'The front of the card',
+    example: '<p>Question</p>',
   })
-  @IsString({ message: 'Question must be a string' })
-  question?: string;
-
-  @ApiProperty({ description: 'The answer of the card', example: '4' })
-  @IsString({ message: 'Answer must be a string' })
-  answer?: string;
-
-  @ApiProperty({ description: 'The AT of the card', example: 3 })
-  @IsNumber({}, { message: 'AT must be a number' })
-  AT?: number;
+  @IsOptional()
+  @IsString()
+  front?: string;
 
   @ApiProperty({
-    description: 'The last time of the card',
-    example: '2024-03-24T12:00:00.000Z',
+    description: 'The back of the card',
+    example: '<p>Answer</p>',
   })
-  lastTime?: Date;
+  @IsOptional()
+  @IsString()
+  back?: string;
 
   @ApiProperty({
-    description: 'The next time of the card',
-    example: '2024-03-24T12:00:00.000Z',
+    description: 'The deck ID',
+    example: '67d69a7ab8a6a6f8c1ee4a35',
   })
-  nextTime?: Date;
-
-  @ApiProperty({
-    description: 'The ID of the deck',
-    example: '609b5b65b20e14655c949a8e',
-  })
+  @IsOptional()
+  @IsString()
   deckId?: string;
+
+  @ApiProperty({ description: 'The type of card', example: 'classic' })
+  @IsOptional()
+  @IsString()
+  cardType?: string;
+
+  @ApiProperty({ description: 'Game options', type: Object })
+  @IsOptional()
+  gameOptions?: {
+    addIncorrect?: boolean;
+    answerFourOptions?: boolean;
+    askFront?: boolean;
+    askSide?: boolean;
+    beHonest?: boolean;
+    dailyTest?: boolean;
+    guessAnswer?: boolean;
+    riddle?: boolean;
+    trueFalse?: boolean;
+    incorrectAnswers?: string[];
+  };
 }
