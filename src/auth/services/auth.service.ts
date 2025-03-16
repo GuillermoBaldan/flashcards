@@ -4,15 +4,25 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { PasswordHelper } from 'src/helpers/password.helper';
 import { UsersService } from 'src/services/users.service';
 import { User } from 'src/modules/users/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  private readonly JWT_SECRET = '3x@mpl3_S3cr3t_K3y_!@#_2025';
+  private readonly JWT_SECRET: string;
+  private readonly JWT_EXPIRATION: string;
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly configService: ConfigService,
+  ) {
+    this.JWT_SECRET = this.configService.get<string>('JWT_SECRET');
+    this.JWT_EXPIRATION = this.configService.get<string>('JWT_EXPIRATION');
+  }
 
   generateToken(payload: JwtPayload): string {
-    return jwt.sign(payload, this.JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign(payload, this.JWT_SECRET, {
+      expiresIn: this.JWT_EXPIRATION,
+    });
   }
 
   verifyToken(token: string): any {
