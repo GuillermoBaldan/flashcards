@@ -44,23 +44,10 @@ export class LoginController {
 
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'strict',
       path: '/',
       maxAge: 3600000,
-    });
-    res.status(HttpStatus.OK).send();
-  }
-
-  @Post('logout')
-  @ApiOperation({ summary: 'Logout user' })
-  @ApiResponse({ status: 200, description: 'Logout successful' })
-  async logout(@Res() res: Response): Promise<void> {
-    res.clearCookie('token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
     });
     res.status(HttpStatus.OK).send();
   }
