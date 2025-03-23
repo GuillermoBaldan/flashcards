@@ -89,7 +89,7 @@ export class CardsService {
     this.checkCardOwnership(card, userId);
     const result = await this.cardModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
-      throw new NotFoundException('Card not found');
+      throw new NotFoundException(ERROR_MESSAGES.CARD_NOT_FOUND.message);
     }
     await this.decksService.removeCardFromDeck(card.deckId, id);
   }
@@ -97,7 +97,7 @@ export class CardsService {
   private async findCardById(id: string): Promise<Card> {
     const card = await this.cardModel.findById(id);
     if (!card) {
-      throw new NotFoundException('Card not found');
+      throw new NotFoundException(ERROR_MESSAGES.CARD_NOT_FOUND.message);
     }
     return card;
   }

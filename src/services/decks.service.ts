@@ -25,7 +25,7 @@ export class DecksService {
   ): Promise<ReadDeckDto> {
     const user = await this.usersService.findOne(userId);
     if (!user) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
     const newDeck = new this.deckModel({
@@ -117,7 +117,7 @@ export class DecksService {
   async verifyDeckOwnership(deckId: string, userId: string): Promise<void> {
     const deck = await this.findOne(deckId, userId);
     if (!deck) {
-      throw new NotFoundException('Deck not found');
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
     }
   }
 

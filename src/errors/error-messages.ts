@@ -14,7 +14,7 @@ export const ERROR_MESSAGES = {
   },
   USER_NOT_FOUND: {
     message: 'User not found',
-    code: 401,
+    code: 404,
   },
 
   // User errors
@@ -30,6 +30,31 @@ export const ERROR_MESSAGES = {
     message: 'Invalid email format',
     code: 400,
   },
+  USERNAME_EMPTY: {
+    message: 'Username cannot be empty',
+    code: 400,
+  },
+  USERNAME_INVALID: {
+    message: 'Username must be a string',
+    code: 400,
+  },
+  USERNAME_TOO_SHORT: {
+    message: 'Username must be at least 4 characters long',
+    code: 400,
+  },
+  USERNAME_INVALID_CHARS: {
+    message: 'Username can only contain letters and numbers',
+    code: 400,
+  },
+  PASSWORD_EMPTY: {
+    message: 'Password cannot be empty',
+    code: 400,
+  },
+  PASSWORD_WEAK: {
+    message:
+      'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
+    code: 400,
+  },
 
   // Deck errors
   DECK_NOT_FOUND: {
@@ -38,6 +63,22 @@ export const ERROR_MESSAGES = {
   },
   UNAUTHORIZED_DECK_ACCESS: {
     message: 'Unauthorized access to deck',
+    code: 400,
+  },
+  DECK_NAME_EMPTY: {
+    message: 'Name cannot be empty',
+    code: 400,
+  },
+  DECK_NAME_INVALID: {
+    message: 'Name must be a string',
+    code: 400,
+  },
+  DECK_COLOR_EMPTY: {
+    message: 'Color cannot be empty',
+    code: 400,
+  },
+  DECK_COLOR_INVALID: {
+    message: 'Color must be a string',
     code: 400,
   },
 
@@ -49,5 +90,43 @@ export const ERROR_MESSAGES = {
   UNAUTHORIZED_CARD_ACCESS: {
     message: 'Unauthorized access to card',
     code: 400,
+  },
+  CARD_FRONT_EMPTY: {
+    message: 'Front cannot be empty',
+    code: 400,
+  },
+  CARD_FRONT_INVALID: {
+    message: 'Front must be a string',
+    code: 400,
+  },
+  CARD_BACK_EMPTY: {
+    message: 'Back cannot be empty',
+    code: 400,
+  },
+  CARD_BACK_INVALID: {
+    message: 'Back must be a string',
+    code: 400,
+  },
+  CARD_DECK_ID_EMPTY: {
+    message: 'Deck ID cannot be empty',
+    code: 400,
+  },
+  CARD_TYPE_EMPTY: {
+    message: 'Card type cannot be empty',
+    code: 400,
+  },
+
+  // Nuevos mensajes
+  INVALID_TOKEN: {
+    message: 'Invalid token',
+    code: 401,
+  },
+  UNAUTHORIZED_ACCESS: {
+    message: 'Unauthorized access',
+    code: 403,
+  },
+  INTERNAL_SERVER_ERROR: {
+    message: 'Internal server error',
+    code: 500,
   },
 };

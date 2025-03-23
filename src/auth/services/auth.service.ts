@@ -5,6 +5,7 @@ import { PasswordHelper } from 'src/helpers/password.helper';
 import { UsersService } from 'src/services/users.service';
 import { User } from 'src/modules/users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
 @Injectable()
 export class AuthService {
@@ -30,7 +31,7 @@ export class AuthService {
       const decoded = jwt.verify(token, this.JWT_SECRET);
       return decoded;
     } catch (error) {
-      throw new Error('Invalid or expired token');
+      throw new Error(ERROR_MESSAGES.INVALID_OR_EXPIRED_TOKEN.message);
     }
   }
 
@@ -48,12 +49,12 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      return null;
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
     const passwordMatch = await this.comparePassword(password, user.password);
     if (!passwordMatch) {
-      return null;
+      throw new Error(ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message);
     }
 
     return user;

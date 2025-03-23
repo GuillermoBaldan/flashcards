@@ -31,6 +31,10 @@ export class UsersController {
     status: 201,
     description: 'The user has been successfully created',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request (invalid email format, weak password, etc.)',
+  })
   @UseInterceptors(AuthMiddleware)
   async create(
     @Body() createUserDto: CreateUserDto,
