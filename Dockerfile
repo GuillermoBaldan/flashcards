@@ -2,7 +2,7 @@
 FROM node:18
 
 # Crea el directorio de trabajo
-RUN mkdir -p /usr/src/app 
+RUN mkdir -p /usr/src/app
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /usr/src/app
@@ -20,4 +20,4 @@ COPY . .
 EXPOSE ${API_PORT}
 
 # Comando para ejecutar la aplicación en modo de desarrollo
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "dev"]
