@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 
 # Expone el puerto interno de la API
-EXPOSE ${API_PORT}
+EXPOSE ${API_INTERNAL_PORT}
 
 # Comando para ejecutar la aplicación en modo de desarrollo
 CMD ["npm", "run", "dev"]
