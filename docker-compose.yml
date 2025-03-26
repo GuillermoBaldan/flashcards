@@ -2,7 +2,8 @@ version: '3.8'
 
 services:
   api:
-    container_name: 'api'
+    image: ${API_CONTAINER_NAME}
+    container_name: ${API_CONTAINER_NAME}
     restart: always
     build: .
     ports:
@@ -11,11 +12,12 @@ services:
       - .env
     volumes:
       - .:/usr/src/app
+      - /usr/src/app/node_modules
     networks:
       - network
 
   mongo_db:
-    container_name: 'mongo_db'
+    container_name: ${MONGO_DB_CONTAINER_NAME}
     image: mongo:latest
     logging:
       driver: none
@@ -32,6 +34,7 @@ services:
       - network
 
   mongo_backup:
+    container_name: ${MONGO_BACKUP_CONTAINER_NAME}
     image: mongo:latest
     logging:
       driver: none
