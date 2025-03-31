@@ -1,5 +1,5 @@
 import * as jwt from 'jsonwebtoken';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { PasswordHelper } from 'src/helpers/password.helper';
 import { UsersService } from 'src/services/users.service';
@@ -49,12 +49,12 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User | null> {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND.message);
+      throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
     const passwordMatch = await this.comparePassword(password, user.password);
     if (!passwordMatch) {
-      throw new Error(ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message);
+      throw new BadRequestException(ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message);
     }
 
     return user;

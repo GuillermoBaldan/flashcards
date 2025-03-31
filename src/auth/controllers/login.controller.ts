@@ -2,7 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  HttpException,
   HttpStatus,
   Res,
 } from '@nestjs/common';
@@ -15,9 +14,7 @@ import {
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dto/login.dto';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { User } from 'src/modules/users/entities/user.entity';
 import { Response } from 'express';
-import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
 @Controller('login')
 @ApiTags('login')
@@ -31,14 +28,7 @@ export class LoginController {
   async login(@Body() loginDto: LoginDto, @Res() res: Response): Promise<void> {
     const { email, password } = loginDto;
 
-    const user: User = await this.authService.validateUser(email, password);
-    if (!user) {
-      throw new HttpException(
-        ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message,
-        ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.code,
-      );
-    }
-
+    const user = await this.authService.validateUser(email, password);
     const payload: JwtPayload = { id: user._id, email: user.email };
     const token = this.authService.generateToken(payload);
 
