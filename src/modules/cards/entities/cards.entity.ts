@@ -27,19 +27,8 @@ export class Card {
   @Prop({ required: true, default: Date.now })
   nextTime: Date;
 
-  @Prop({ type: Object })
-  gameOptions: {
-    addIncorrect: boolean;
-    answerFourOptions: boolean;
-    askFront: boolean;
-    askSide: boolean;
-    beHonest: boolean;
-    dailyTest: boolean;
-    guessAnswer: boolean;
-    riddle: boolean;
-    trueFalse: boolean;
-    incorrectAnswers?: string[];
-  };
+  @Prop({ type: Object, required: true })
+  gameOptions: Record<string, any>;
 }
 
 export type CardDocument = Card & Document;

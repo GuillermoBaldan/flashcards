@@ -31,6 +31,7 @@ export class CardsService {
       AT: 0,
       lastTime: new Date(),
       nextTime: new Date(),
+      gameOptions: createCardDto.gameOptions || {}
     });
     const savedCard = await newCard.save();
 

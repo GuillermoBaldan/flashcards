@@ -5,6 +5,7 @@ import {
   IsArray,
   IsBoolean,
   IsOptional,
+  IsObject,
 } from 'class-validator';
 import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
@@ -38,17 +39,21 @@ export class CreateCardDto {
   @IsString({ message: ERROR_MESSAGES.CARD_TYPE_EMPTY.message })
   cardType: string;
 
-  @ApiProperty({ description: 'Game options', type: Object })
-  gameOptions: {
-    addIncorrect: boolean;
-    answerFourOptions: boolean;
-    askFront: boolean;
-    askSide: boolean;
-    beHonest: boolean;
-    dailyTest: boolean;
-    guessAnswer: boolean;
-    riddle: boolean;
-    trueFalse: boolean;
-    incorrectAnswers?: string[];
-  };
+  @ApiProperty({ 
+    description: 'Game options',
+    example: {
+      addIncorrect: false,
+      answerFourOptions: false,
+      askFront: true,
+      askSide: false,
+      beHonest: true,
+      dailyTest: true,
+      guessAnswer: true,
+      riddle: true,
+      trueFalse: true
+    }
+  })
+  @IsNotEmpty({ message: 'Game options are required' })
+  @IsObject({ message: 'Game options must be an object' })
+  gameOptions: Record<string, any>;
 }
