@@ -86,6 +86,45 @@ export class UsersController {
     return this.usersService.findOne(userId);
   }
 
+  @Get('email')
+  @ApiOperation({ summary: 'Get the current user email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Email of the current user',
+    type: String,
+  })
+  async getEmail(@Req() req: Request): Promise<string> {
+    const userId = req.user.id;
+    const user = await this.usersService.findOne(userId);
+    return user.email;
+  }
+
+  @Get('username')
+  @ApiOperation({ summary: 'Get the current user username' })
+  @ApiResponse({
+    status: 200,
+    description: 'Username of the current user',
+    type: String,
+  })
+  async getUsername(@Req() req: Request): Promise<string> {
+    const userId = req.user.id;
+    const user = await this.usersService.findOne(userId);
+    return user.username;
+  }
+
+  @Get('created-at')
+  @ApiOperation({ summary: 'Get the account creation date' })
+  @ApiResponse({
+    status: 200,
+    description: 'Account creation date',
+    type: Date,
+  })
+  async getCreatedAt(@Req() req: Request): Promise<Date> {
+    const userId = req.user.id;
+    const user = await this.usersService.findOne(userId);
+    return user.createdAt;
+  }
+
   @Patch()
   @ApiOperation({ summary: 'Update the current user' })
   @ApiBody({ type: UpdateUserDto })
