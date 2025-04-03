@@ -30,10 +30,13 @@ services:
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     env_file:
       - .env
+    volumes:
+      - mongo_data:/data/db
     networks:
       - network
 
   mongo_backup:
+    profiles: ["backup"]
     container_name: ${MONGO_BACKUP_CONTAINER_NAME}
     image: mongo:latest
     logging:
@@ -45,7 +48,7 @@ services:
     entrypoint: >
       /bin/sh -c "while true; do
         mongodump --quiet --host mongo_db --username ${MONGO_INITDB_ROOT_USERNAME} --password ${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase admin --out /backup/latest;
-        sleep 5;
+        sleep 86400;
       done"
     networks:
       - network
@@ -54,3 +57,6 @@ networks:
   network:
     name: flashcards_network
     driver: bridge
+
+volumes:
+  mongo_data:
