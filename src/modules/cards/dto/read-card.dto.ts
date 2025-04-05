@@ -32,20 +32,4 @@ export class ReadCardDto {
     description: 'Game options',
   })
   gameOptions: object;
-
-  @ApiProperty({
-    description: 'Attempts count',
-    example: 0,
-  })
-  AT: number;
-
-  @ApiProperty({
-    description: 'Last review time',
-  })
-  lastTime: Date;
-
-  @ApiProperty({
-    description: 'Next review time',
-  })
-  nextTime: Date;
 }

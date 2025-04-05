@@ -47,9 +47,6 @@ export class CardsService {
       deckId: savedCard.deckId,
       cardType: savedCard.cardType,
       gameOptions: savedCard.gameOptions,
-      AT: savedCard.AT,
-      lastTime: savedCard.lastTime,
-      nextTime: savedCard.nextTime,
     };
   }
 
@@ -63,9 +60,6 @@ export class CardsService {
       deckId: card.deckId,
       cardType: card.cardType,
       gameOptions: card.gameOptions,
-      AT: card.AT,
-      lastTime: card.lastTime,
-      nextTime: card.nextTime,
     }));
   }
 
