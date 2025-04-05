@@ -28,6 +28,17 @@ export class DecksService {
       throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
+    const existingDeck = await this.deckModel.findOne({
+      userId,
+      name: createDeckDto.name,
+    }).exec();
+
+    if (existingDeck) {
+      throw new BadRequestException(
+        ERROR_MESSAGES.DECK_NAME_ALREADY_EXISTS.message,
+      );
+    }
+
     const newDeck = new this.deckModel({
       ...createDeckDto,
       userId,
@@ -122,7 +133,6 @@ export class DecksService {
   }
 
   async addCardToDeck(deckId: string, cardId: string): Promise<void> {
-    console.log(cardId);
     await this.deckModel.updateOne(
       { _id: deckId },
       { $push: { cards_id: cardId } },

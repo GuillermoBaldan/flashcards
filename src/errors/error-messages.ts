@@ -81,6 +81,10 @@ export const ERROR_MESSAGES = {
     message: 'Color must be a string',
     code: 400,
   },
+  DECK_NAME_ALREADY_EXISTS: {
+    message: 'Ya existe un deck con este nombre para el usuario',
+    code: 400,
+  },
 
   // Card errors
   CARD_NOT_FOUND: {
