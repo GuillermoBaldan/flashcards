@@ -82,7 +82,7 @@ export const ERROR_MESSAGES = {
     code: 400,
   },
   DECK_NAME_ALREADY_EXISTS: {
-    message: 'Ya existe un deck con este nombre para el usuario',
+    message: 'A deck with this name already exists for the user',
     code: 400,
   },
 
