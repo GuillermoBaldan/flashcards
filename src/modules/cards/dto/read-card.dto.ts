@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Deck } from '../../decks/entities/deck.entity';
 
 export class ReadCardDto {
   @ApiProperty({
@@ -32,4 +33,16 @@ export class ReadCardDto {
     description: 'Game options',
   })
   gameOptions: object;
+
+  @ApiProperty({
+    description: 'Difficulty level of the card',
+    example: 3,
+  })
+  difficulty: number;
+
+  @ApiProperty({
+    description: 'Last review date of the card',
+    example: '2023-01-01T00:00:00.000Z',
+  })
+  lastReview: Date;
 }
