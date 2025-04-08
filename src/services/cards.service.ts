@@ -2,9 +2,10 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { ReadCardDto } from '../modules/cards/dto/read-card.dto';
 import { CreateCardDto } from '../modules/cards/dto/create-card.dto';
 import { UpdateCardDto } from '../modules/cards/dto/update-card.dto';
@@ -28,9 +29,8 @@ export class CardsService {
     const newCard = new this.cardModel({
       ...createCardDto,
       userId,
-      AT: 0,
-      lastTime: new Date(),
-      nextTime: new Date(),
+      difficulty: -1,
+      lastReview: new Date(),
       gameOptions: createCardDto.gameOptions || {}
     });
     const savedCard = await newCard.save();
@@ -47,19 +47,25 @@ export class CardsService {
       deckId: savedCard.deckId,
       cardType: savedCard.cardType,
       gameOptions: savedCard.gameOptions,
+      difficulty: savedCard.difficulty,
+      lastReview: savedCard.lastReview
     };
   }
 
   async findByDeckId(deckId: string, userId: string): Promise<ReadCardDto[]> {
-    await this.decksService.verifyDeckOwnership(deckId, userId);
-    const cards = await this.cardModel.find({ deckId }).exec();
+    const objectIdDeckId = new Types.ObjectId(deckId);
+    const allCards = await this.cardModel.find().exec();
+    const cards = await this.cardModel.find({ deckId: objectIdDeckId }).exec();
+    
     return cards.map((card) => ({
       id: card._id.toString(),
       front: card.front,
       back: card.back,
-      deckId: card.deckId,
+      deckId: card.deckId.toString(),
       cardType: card.cardType,
       gameOptions: card.gameOptions,
+      difficulty: card.difficulty,
+      lastReview: card.lastReview
     }));
   }
 
@@ -89,7 +95,28 @@ export class CardsService {
     await this.decksService.removeCardFromDeck(card.deckId, id);
   }
 
-  private async findCardById(id: string): Promise<Card> {
+  async updateCardDifficulty(cardId: string, isCorrect: boolean, userId: string): Promise<Card> {
+    try {
+      const card = await this.findCardById(cardId);
+      this.checkCardOwnership(card, userId);
+      
+      if (card.difficulty === -1) {
+        card.difficulty = 5;
+      }
+
+      card.difficulty = isCorrect ? 
+        Math.max(0, card.difficulty - 0.85) : 
+        Math.min(10, card.difficulty + 1.25); 
+      
+      card.lastReview = new Date();
+      
+      return await card.save();
+    } catch (error) {
+      throw new InternalServerErrorException(ERROR_MESSAGES.CARD_UPDATE_FAILED.message);
+    }
+  }
+
+  private async findCardById(id: string): Promise<CardDocument> {
     const card = await this.cardModel.findById(id);
     if (!card) {
       throw new NotFoundException(ERROR_MESSAGES.CARD_NOT_FOUND.message);

@@ -11,6 +11,12 @@ import { UserModel } from '../users/entities/user.entity';
 @Module({
   imports: [CardModel, DeckModel, UserModel],
   controllers: [CardsController],
-  providers: [CardsService, DecksService, AuthService, UsersService],
+  providers: [
+    CardsService, 
+    DecksService,
+    AuthService,
+    UsersService
+  ],
+  exports: [CardsService]
 })
 export class CardsModule {}

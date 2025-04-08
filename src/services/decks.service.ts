@@ -140,9 +140,12 @@ export class DecksService {
   }
 
   async removeCardFromDeck(deckId: string, cardId: string): Promise<void> {
-    await this.deckModel.updateOne(
-      { _id: deckId },
-      { $pull: { cards_id: cardId } },
-    );
+    const deck = await this.deckModel.findById(deckId);
+    if (!deck) {
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
+    }
+
+    deck.cards_id = deck.cards_id.filter(id => id !== cardId);
+    await deck.save();
   }
 }

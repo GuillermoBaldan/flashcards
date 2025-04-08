@@ -1,5 +1,5 @@
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Schema as MongooseSchema } from 'mongoose';
 
 @Schema()
 export class Card {
@@ -9,7 +9,7 @@ export class Card {
   @Prop({ required: true })
   back: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   deckId: string;
 
   @Prop({ required: true })
@@ -18,14 +18,11 @@ export class Card {
   @Prop({ required: true })
   cardType: string;
 
-  @Prop({ required: true, default: 0 })
-  AT: number;
+  @Prop({ required: true, default: 3 })
+  difficulty: number;
 
   @Prop({ required: true, default: Date.now })
-  lastTime: Date;
-
-  @Prop({ required: true, default: Date.now })
-  nextTime: Date;
+  lastReview: Date;
 
   @Prop({ type: Object, required: true })
   gameOptions: Record<string, any>;
