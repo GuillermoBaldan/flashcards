@@ -63,7 +63,7 @@ export const ERROR_MESSAGES = {
   },
   UNAUTHORIZED_DECK_ACCESS: {
     message: 'Unauthorized access to deck',
-    code: 400,
+    code: 403,
   },
   DECK_NAME_EMPTY: {
     message: 'Name cannot be empty',
@@ -93,7 +93,7 @@ export const ERROR_MESSAGES = {
   },
   UNAUTHORIZED_CARD_ACCESS: {
     message: 'Unauthorized access to card',
-    code: 400,
+    code: 403,
   },
   CARD_FRONT_EMPTY: {
     message: 'Front cannot be empty',
@@ -132,5 +132,35 @@ export const ERROR_MESSAGES = {
   INTERNAL_SERVER_ERROR: {
     message: 'Internal server error',
     code: 500,
+  },
+
+  // Game errors
+  INSUFFICIENT_DECK_CARDS: {
+    message: 'Deck does not have enough cards (minimum 5)',
+    code: 400,
+  },
+  INVALID_GAME_MODE: {
+    message: 'Invalid game mode',
+    code: 400,
+  },
+  INVALID_DIFFICULTY_LEVEL: {
+    message: 'Invalid difficulty level',
+    code: 400,
+  },
+  NOT_ENOUGH_CARDS: {
+    message: 'Not enough cards to play',
+    code: 400,
+  },
+  CARD_UPDATE_FAILED: {
+    message: 'Failed to update card difficulty',
+    code: 500,
+  },
+  INVALID_CARD_DISTRIBUTION: {
+    message: 'Invalid card distribution',
+    code: 400,
+  },
+  INVALID_CARD_COUNT: {
+    message: 'Invalid card count',
+    code: 400,
   },
 };
