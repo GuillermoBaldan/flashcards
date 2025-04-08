@@ -10,6 +10,7 @@ import { UsersService } from './services/users.service';
 import { UserModel } from './modules/users/entities/user.entity';
 import { routes, RouteConfig } from './config/routes';
 import { SanitizeMiddleware } from './middlewares/sanitize.middleware';
+import { GameModule } from './modules/game/game.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { SanitizeMiddleware } from './middlewares/sanitize.middleware';
     CardsModule,
     AuthModule,
     UserModel,
+    GameModule
   ],
   providers: [AuthService, UsersService],
 })
