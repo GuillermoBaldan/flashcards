@@ -15,4 +15,8 @@ export const routes: RouteConfig[] = [
   { path: '/cards', requiresAuth: true },
   { path: '/cards/:card_id', requiresAuth: true },
   { path: '/logout', requiresAuth: false },
+  { path: '/game/start', requiresAuth: true },
+  { path: '/game/update-card', requiresAuth: true },
+  { path: '/game/calculate-cards', requiresAuth: true },
+  { path: '/game/update-results', requiresAuth: true }
 ];
