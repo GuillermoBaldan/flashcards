@@ -10,5 +10,6 @@ import { AuthService } from 'src/auth/services/auth.service';
   imports: [DeckModel, UserModel],
   controllers: [DecksController],
   providers: [DecksService, UsersService, AuthService],
+  exports: [DecksService]
 })
 export class DecksModule {}

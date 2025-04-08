@@ -12,5 +12,7 @@ import { UsersModule } from 'src/modules/users/users.module';
   imports: [UsersModule, UserModel],
   providers: [AuthService, AuthMiddleware, UsersService],
   controllers: [UsersController, LoginController, LogoutController],
+  exports: [AuthService]
 })
 export class AuthModule {}
+ 
