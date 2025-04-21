@@ -68,7 +68,7 @@ export class DecksController {
   @Get()
   @ApiOperation({ summary: 'Get all decks of the current user' })
   @ApiResponse({
-    status: 200,
+    status: 200, 
     description: 'List of decks',
     type: ReadDeckDto,
     isArray: true,
