@@ -56,4 +56,12 @@ export class CreateCardDto {
   @IsNotEmpty({ message: 'Game options are required' })
   @IsObject({ message: 'Game options must be an object' })
   gameOptions: Record<string, any>;
+
+  @ApiProperty({ description: 'Last review timestamp', example: 1744997138 })
+  @IsNotEmpty()
+  lastReview: number;
+
+  @ApiProperty({ description: 'Next review timestamp', example: 1799007138 })
+  @IsNotEmpty()
+  nextReview: number;
 }

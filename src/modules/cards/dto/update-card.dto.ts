@@ -45,4 +45,12 @@ export class UpdateCardDto {
     trueFalse?: boolean;
     incorrectAnswers?: string[];
   };
+
+  @ApiProperty({ description: 'Next review timestamp', example: 1799007138 })
+  @IsOptional()
+  nextReview?: number;
+
+  @ApiProperty({ description: 'Last review timestamp', example: 1744997138 })
+  @IsOptional()
+  lastReview?: number;
 }

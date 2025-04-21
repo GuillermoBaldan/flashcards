@@ -10,6 +10,12 @@ export class CardResultDto {
   @ApiProperty()
   @IsBoolean()
   isCorrect: boolean;
+
+  @ApiProperty()
+  lastReview: number;
+
+  @ApiProperty()
+  nextReview: number;
 }
 
 export class UpdateCardResultsDto {

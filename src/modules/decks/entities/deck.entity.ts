@@ -14,6 +14,9 @@ export class Deck {
 
   @Prop({ required: true })
   userId: string;
+
+  @Prop()
+  firstCardNextReview: number;
 }
 
 export type DeckDocument = Deck & Document;

@@ -19,9 +19,15 @@ export class ReadDeckDto {
   })
   color: string;
 
-  @ApiProperty({
+  @ApiProperty({ 
     description: 'Number of cards in the deck',
     example: 5,
   })
   cards_count: number;
+
+  @ApiProperty({ 
+    description: 'Timestamp of next review for first card',
+    example: 1799007138 
+  })
+  firstCardNextReview?: number;
 }

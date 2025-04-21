@@ -35,14 +35,11 @@ export class ReadCardDto {
   gameOptions: object;
 
   @ApiProperty({
-    description: 'Difficulty level of the card',
-    example: 3,
-  })
-  difficulty: number;
-
-  @ApiProperty({
     description: 'Last review date of the card',
-    example: '2023-01-01T00:00:00.000Z',
+    example: 1744884048,
   })
-  lastReview: Date;
+  lastReview: number;
+
+  @ApiProperty({ description: 'Next review timestamp', example: 1799007138 })
+  nextReview: number;
 }

@@ -13,16 +13,13 @@ export class Card {
   deckId: string;
 
   @Prop({ required: true })
-  userId: string;
-
-  @Prop({ required: true })
   cardType: string;
 
-  @Prop({ required: true, default: 3 })
-  difficulty: number;
+  @Prop({ required: true })
+  lastReview: number;
 
-  @Prop({ required: true, default: Date.now })
-  lastReview: Date;
+  @Prop({ required: true })
+  nextReview: number;
 
   @Prop({ type: Object, required: true })
   gameOptions: Record<string, any>;

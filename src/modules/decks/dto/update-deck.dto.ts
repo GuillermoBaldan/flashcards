@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 
 export class UpdateDeckDto {
   @ApiProperty({
@@ -18,4 +19,12 @@ export class UpdateDeckDto {
     example: '#00FF00',
   })
   color?: string;
+
+  @ApiProperty({ 
+    description: 'Timestamp de la próxima revisión de la primera tarjeta',
+    example: 1799007138,
+    required: false
+  })
+  @IsOptional()
+  firstCardNextReview?: number;
 }

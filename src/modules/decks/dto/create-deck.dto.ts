@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional } from 'class-validator';
 import { ERROR_MESSAGES } from 'src/errors/error-messages';
 
 export class CreateDeckDto {
@@ -18,4 +18,12 @@ export class CreateDeckDto {
   @IsNotEmpty({ message: ERROR_MESSAGES.DECK_COLOR_EMPTY.message })
   @IsString({ message: ERROR_MESSAGES.DECK_COLOR_INVALID.message })
   color: string;
+
+  @ApiProperty({ 
+    description: 'Timestamp of next review for first card',
+    example: 1799007138,
+    required: false
+  })
+  @IsOptional()
+  firstCardNextReview?: number;
 }
