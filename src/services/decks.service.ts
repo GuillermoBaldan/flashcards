@@ -11,12 +11,16 @@ import { ReadDeckDto } from '../modules/decks/dto/read-deck.dto';
 import { CreateDeckDto } from '../modules/decks/dto/create-deck.dto';
 import { UpdateDeckDto } from '../modules/decks/dto/update-deck.dto';
 import { ERROR_MESSAGES } from '../errors/error-messages';
+import { Card, CardDocument } from '../modules/cards/entities/cards.entity';
+import { OwnershipService } from './ownership.service';
 
 @Injectable()
 export class DecksService {
   constructor(
     @InjectModel(Deck.name) private readonly deckModel: Model<DeckDocument>,
+    @InjectModel(Card.name) private readonly cardModel: Model<CardDocument>,
     private readonly usersService: UsersService,
+    private readonly ownershipService: OwnershipService,
   ) {}
 
   async create(
@@ -66,8 +70,10 @@ export class DecksService {
   }
 
   async findOne(id: string, userId: string): Promise<ReadDeckDto> {
-    const deck = await this.findDeckById(id);
-    this.checkDeckOwnership(deck, userId);
+    const deck = await this.deckModel.findOne({ _id: id, userId }).exec();
+    if (!deck) {
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
+    }
     return {
       id: id,
       name: deck.name,
@@ -77,13 +83,11 @@ export class DecksService {
   }
 
   async remove(id: string, userId: string): Promise<void> {
-    const deck = await this.findDeckById(id);
-    this.checkDeckOwnership(deck, userId);
+    await this.ownershipService.verifyDeckOwnership(id, userId);
     const result = await this.deckModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
       throw new NotFoundException('Deck not found');
     }
-
     await this.usersService.removeDeckFromUser(userId, id);
   }
 
@@ -92,44 +96,18 @@ export class DecksService {
     updateDeckDto: UpdateDeckDto,
     userId: string,
   ): Promise<ReadDeckDto> {
-    const deck = await this.findDeckById(id);
-    this.checkDeckOwnership(deck, userId);
-
+    await this.ownershipService.verifyDeckOwnership(id, userId);
     const updatedDeck = await this.deckModel.findByIdAndUpdate(
       id,
       updateDeckDto,
       { new: true },
     );
-
     return {
       id: updatedDeck._id.toString(),
       name: updatedDeck.name,
       color: updatedDeck.color,
       cards_count: updatedDeck.cards_id?.length || 0,
     };
-  }
-
-  private async findDeckById(id: string): Promise<Deck> {
-    const deck = await this.deckModel.findById(id);
-    if (!deck) {
-      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
-    }
-    return deck;
-  }
-
-  private checkDeckOwnership(deck: Deck, userId: string): void {
-    if (deck.userId !== userId) {
-      throw new BadRequestException(
-        ERROR_MESSAGES.UNAUTHORIZED_DECK_ACCESS.message,
-      );
-    }
-  }
-
-  async verifyDeckOwnership(deckId: string, userId: string): Promise<void> {
-    const deck = await this.findOne(deckId, userId);
-    if (!deck) {
-      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
-    }
   }
 
   async addCardToDeck(deckId: string, cardId: string): Promise<void> {
