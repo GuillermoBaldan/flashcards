@@ -27,8 +27,7 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@modules/*": ["src/modules/*"],
       "@providers/*": ["src/providers/*"],
-      "@services/*": ["src/services/*"],
-      "@redis/*": ["src/redis/*"]
+      "@services/*": ["src/services/*"]
     }
   },
   "watchOptions": {
