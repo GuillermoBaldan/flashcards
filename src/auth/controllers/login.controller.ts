@@ -1,19 +1,13 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpStatus,
-  Res,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpStatus, Res } from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiBadRequestResponse,
 } from '@nestjs/swagger';
-import { AuthService } from '../services/auth.service';
-import { LoginDto } from '../dto/login.dto';
-import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { AuthService } from '@auth/services/auth.service';
+import { LoginDto } from '@auth/dto/login.dto';
+import { JwtPayload } from '@auth/interfaces/jwt-payload.interface';
 import { Response } from 'express';
 
 @Controller('login')

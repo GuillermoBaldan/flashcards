@@ -16,11 +16,11 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
-import { ReadDeckDto } from './dto/read-deck.dto';
-import { CreateDeckDto } from './dto/create-deck.dto';
-import { UpdateDeckDto } from './dto/update-deck.dto';
-import { DecksService } from 'src/services/decks.service';
-import { AuthMiddleware } from 'src/middlewares/auth.middleware';
+import { ReadDeckDto } from '@modules/decks/dto/read-deck.dto';
+import { CreateDeckDto } from '@modules/decks/dto/create-deck.dto';
+import { UpdateDeckDto } from '@modules/decks/dto/update-deck.dto';
+import { DecksService } from '@services/decks.service';
+import { AuthMiddleware } from '@middlewares/auth.middleware';
 import { Request } from 'express';
 
 @Controller('decks')
@@ -68,7 +68,7 @@ export class DecksController {
   @Get()
   @ApiOperation({ summary: 'Get all decks of the current user' })
   @ApiResponse({
-    status: 200, 
+    status: 200,
     description: 'List of decks',
     type: ReadDeckDto,
     isArray: true,

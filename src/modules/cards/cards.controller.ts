@@ -16,14 +16,14 @@ import {
   ApiBody,
   ApiParam,
 } from '@nestjs/swagger';
-import { ReadCardDto } from './dto/read-card.dto';
-import { CreateCardDto } from './dto/create-card.dto';
-import { UpdateCardDto } from './dto/update-card.dto';
-import { CardsService } from 'src/services/cards.service';
+import { ReadCardDto } from '@modules/cards/dto/read-card.dto';
+import { CreateCardDto } from '@modules/cards/dto/create-card.dto';
+import { UpdateCardDto } from '@modules/cards/dto/update-card.dto';
+import { CardsService } from '@services/cards.service';
 import { Request } from 'express';
-import { Card } from './entities/cards.entity';
-import { AuthMiddleware } from 'src/middlewares/auth.middleware';
-import { SanitizeMiddleware } from 'src/middlewares/sanitize.middleware';
+import { Card } from '@modules/cards/entities/cards.entity';
+import { AuthMiddleware } from '@middlewares/auth.middleware';
+import { SanitizeMiddleware } from '@middlewares/sanitize.middleware';
 
 @Controller('cards')
 @ApiTags('Cards')

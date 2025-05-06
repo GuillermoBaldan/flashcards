@@ -1,16 +1,16 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { DecksModule } from './modules/decks/decks.module';
-import { CardsModule } from './modules/cards/cards.module';
-import { AuthModule } from './auth/auth.module';
-import { AuthMiddleware } from './middlewares/auth.middleware';
-import { AuthService } from './auth/services/auth.service';
-import { UsersService } from './services/users.service';
-import { UserModel } from './modules/users/entities/user.entity';
-import { routes, RouteConfig } from './config/routes';
-import { SanitizeMiddleware } from './middlewares/sanitize.middleware';
-import { GameModule } from './modules/game/game.module';
+import { DecksModule } from '@modules/decks/decks.module';
+import { CardsModule } from '@modules/cards/cards.module';
+import { AuthModule } from '@auth/auth.module';
+import { AuthMiddleware } from '@middlewares/auth.middleware';
+import { AuthService } from '@auth/services/auth.service';
+import { UsersService } from '@services/users.service';
+import { UserModel } from '@modules/users/entities/user.entity';
+import { routes, RouteConfig } from '@config/routes';
+import { SanitizeMiddleware } from '@middlewares/sanitize.middleware';
+import { GameModule } from '@modules/game/game.module';
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ import { GameModule } from './modules/game/game.module';
     CardsModule,
     AuthModule,
     UserModel,
-    GameModule
+    GameModule,
   ],
   providers: [AuthService, UsersService],
 })

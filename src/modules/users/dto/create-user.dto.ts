@@ -6,7 +6,7 @@ import {
   MinLength,
   Matches,
 } from 'class-validator';
-import { ERROR_MESSAGES } from 'src/errors/error-messages';
+import { ERROR_MESSAGES } from '@errors/error-messages';
 
 export class CreateUserDto {
   @ApiProperty({ description: 'The username of the user', example: 'john_doe' })

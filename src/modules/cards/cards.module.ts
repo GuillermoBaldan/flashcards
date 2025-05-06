@@ -1,31 +1,34 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { CardsController } from './cards.controller';
-import { CardsService } from 'src/services/cards.service';
-import { DecksService } from 'src/services/decks.service';
-import { AuthService } from 'src/auth/services/auth.service';
-import { Card, CardSchema } from './entities/cards.entity';
-import { DeckModel } from '../decks/entities/deck.entity';
-import { UsersService } from 'src/services/users.service';
-import { UserModel } from '../users/entities/user.entity';
-import { OwnershipService } from 'src/services/ownership.service';
-import { OwnershipModule } from '../ownership/ownership.module';
+import { CardsController } from '@modules/cards/cards.controller';
+import { CardsService } from '@services/cards.service';
+import { DecksService } from '@services/decks.service';
+import { AuthService } from '@auth/services/auth.service';
+import { Card, CardSchema } from '@modules/cards/entities/cards.entity';
+import { DeckModel } from '@modules/decks/entities/deck.entity';
+import { UsersService } from '@services/users.service';
+import { UserModel } from '@modules/users/entities/user.entity';
+import { OwnershipService } from '@services/ownership.service';
+import { OwnershipModule } from '@modules/ownership/ownership.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Card.name, schema: CardSchema }]),
     DeckModel,
     UserModel,
-    OwnershipModule
+    OwnershipModule,
   ],
   controllers: [CardsController],
   providers: [
-    CardsService, 
+    CardsService,
     DecksService,
     AuthService,
     UsersService,
-    OwnershipService
+    OwnershipService,
   ],
-  exports: [CardsService, MongooseModule.forFeature([{ name: Card.name, schema: CardSchema }])]
+  exports: [
+    CardsService,
+    MongooseModule.forFeature([{ name: Card.name, schema: CardSchema }]),
+  ],
 })
 export class CardsModule {}

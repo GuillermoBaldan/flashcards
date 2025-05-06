@@ -10,14 +10,14 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
-import { UsersService } from '../../services/users.service';
-import { AuthMiddleware } from 'src/middlewares/auth.middleware';
+import { CreateUserDto } from '@modules/users/dto/create-user.dto';
+import { UpdateUserDto } from '@modules/users/dto/update-user.dto';
+import { User } from '@modules/users/entities/user.entity';
+import { UsersService } from '@services/users.service';
+import { AuthMiddleware } from '@middlewares/auth.middleware';
 import { isEmail } from 'class-validator';
 import { Request } from 'express';
-import { ERROR_MESSAGES } from 'src/errors/error-messages';
+import { ERROR_MESSAGES } from '@errors/error-messages';
 
 @Controller('users')
 @ApiTags('users')

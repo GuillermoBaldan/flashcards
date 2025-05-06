@@ -1,13 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  IsBoolean,
-  IsOptional,
-  IsObject,
-} from 'class-validator';
-import { ERROR_MESSAGES } from 'src/errors/error-messages';
+import { IsString, IsNotEmpty, IsObject } from 'class-validator';
+import { ERROR_MESSAGES } from '@errors/error-messages';
 
 export class CreateCardDto {
   @ApiProperty({
@@ -39,7 +32,7 @@ export class CreateCardDto {
   @IsString({ message: ERROR_MESSAGES.CARD_TYPE_EMPTY.message })
   cardType: string;
 
-  @ApiProperty({ 
+  @ApiProperty({
     description: 'Game options',
     example: {
       addIncorrect: false,
@@ -50,8 +43,8 @@ export class CreateCardDto {
       dailyTest: true,
       guessAnswer: true,
       riddle: true,
-      trueFalse: true
-    }
+      trueFalse: true,
+    },
   })
   @IsNotEmpty({ message: 'Game options are required' })
   @IsObject({ message: 'Game options must be an object' })

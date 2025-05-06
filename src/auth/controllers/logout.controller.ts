@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Post,
-  HttpStatus,
-  Res,
-} from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { Controller, Post, HttpStatus, Res } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 
 @Controller('logout')
@@ -26,4 +17,4 @@ export class LogoutController {
     });
     res.status(HttpStatus.OK).send();
   }
-} 
+}

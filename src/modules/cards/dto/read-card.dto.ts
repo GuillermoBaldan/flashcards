@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Deck } from '../../decks/entities/deck.entity';
 
 export class ReadCardDto {
   @ApiProperty({

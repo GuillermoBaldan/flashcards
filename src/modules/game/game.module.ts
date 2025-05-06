@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { GameController } from './game.controller';
-import { GameService } from 'src/services/games.service';
-import { CardModel } from '../cards/entities/cards.entity';
-import { DecksModule } from '../decks/decks.module';
-import { AuthModule } from 'src/auth/auth.module';
-import { UsersModule } from '../users/users.module';
-import { CardsModule } from '../cards/cards.module';
-import { OwnershipModule } from '../ownership/ownership.module';
+import { GameController } from '@modules/game/game.controller';
+import { GameService } from '@services/games.service';
+import { CardModel } from '@modules/cards/entities/cards.entity';
+import { DecksModule } from '@modules/decks/decks.module';
+import { AuthModule } from '@auth/auth.module';
+import { UsersModule } from '@modules/users/users.module';
+import { CardsModule } from '@modules/cards/cards.module';
+import { OwnershipModule } from '@modules/ownership/ownership.module';
 
 @Module({
   imports: [
@@ -15,11 +15,10 @@ import { OwnershipModule } from '../ownership/ownership.module';
     AuthModule,
     UsersModule,
     CardsModule,
-    OwnershipModule
+    OwnershipModule,
   ],
   controllers: [GameController],
   providers: [GameService],
-  exports: [GameService]
+  exports: [GameService],
 })
 export class GameModule {}
- 

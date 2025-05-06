@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Deck, DeckDocument } from '../modules/decks/entities/deck.entity';
-import { UsersService } from './users.service';
-import { ReadDeckDto } from '../modules/decks/dto/read-deck.dto';
-import { CreateDeckDto } from '../modules/decks/dto/create-deck.dto';
-import { UpdateDeckDto } from '../modules/decks/dto/update-deck.dto';
-import { ERROR_MESSAGES } from '../errors/error-messages';
-import { Card, CardDocument } from '../modules/cards/entities/cards.entity';
-import { OwnershipService } from './ownership.service';
+import { Deck, DeckDocument } from '@modules/decks/entities/deck.entity';
+import { UsersService } from '@services/users.service';
+import { ReadDeckDto } from '@modules/decks/dto/read-deck.dto';
+import { CreateDeckDto } from '@modules/decks/dto/create-deck.dto';
+import { UpdateDeckDto } from '@modules/decks/dto/update-deck.dto';
+import { ERROR_MESSAGES } from '@errors/error-messages';
+import { Card, CardDocument } from '@modules/cards/entities/cards.entity';
+import { OwnershipService } from '@services/ownership.service';
 
 @Injectable()
 export class DecksService {
@@ -32,10 +32,12 @@ export class DecksService {
       throw new NotFoundException(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
-    const existingDeck = await this.deckModel.findOne({
-      userId,
-      name: createDeckDto.name,
-    }).exec();
+    const existingDeck = await this.deckModel
+      .findOne({
+        userId,
+        name: createDeckDto.name,
+      })
+      .exec();
 
     if (existingDeck) {
       throw new BadRequestException(
@@ -123,7 +125,53 @@ export class DecksService {
       throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
     }
 
-    deck.cards_id = deck.cards_id.filter(id => id !== cardId);
+    deck.cards_id = deck.cards_id.filter((id) => id !== cardId);
     await deck.save();
+  }
+
+  async cloneDeck(deckId: string, fromUserId: string, toUserId: string) {
+    await this.ownershipService.verifyDeckOwnership(deckId, fromUserId);
+
+    const deck = await this.deckModel.findById(deckId).exec();
+    if (!deck) {
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
+    }
+
+    const newDeck = new this.deckModel({
+      name: deck.name,
+      color: deck.color,
+      userId: toUserId,
+      cards_id: [],
+      firstCardNextReview: deck.firstCardNextReview,
+    });
+
+    await newDeck.save();
+
+    if (deck.cards_id?.length > 0) {
+      const cards = await this.cardModel
+        .find({ _id: { $in: deck.cards_id } })
+        .exec();
+
+      for (const card of cards) {
+        const newCard = new this.cardModel({
+          front: card.front,
+          back: card.back,
+          deckId: newDeck._id.toString(),
+          cardType: card.cardType,
+          gameOptions: card.gameOptions,
+          lastReview: card.lastReview,
+          nextReview: card.nextReview,
+        });
+
+        await newCard.save();
+        newDeck.cards_id.push(newCard._id.toString());
+      }
+
+      await newDeck.save();
+    }
+
+    await this.usersService.addDeckToUser(toUserId, newDeck._id.toString());
+
+    return newDeck;
   }
 }

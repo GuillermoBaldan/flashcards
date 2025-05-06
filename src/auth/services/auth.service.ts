@@ -1,11 +1,15 @@
 import * as jwt from 'jsonwebtoken';
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { JwtPayload } from '../interfaces/jwt-payload.interface';
-import { PasswordHelper } from 'src/helpers/password.helper';
-import { UsersService } from 'src/services/users.service';
-import { User } from 'src/modules/users/entities/user.entity';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { JwtPayload } from '@auth/interfaces/jwt-payload.interface';
+import { PasswordHelper } from '@helpers/password.helper';
+import { UsersService } from '@services/users.service';
+import { User } from '@modules/users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import { ERROR_MESSAGES } from 'src/errors/error-messages';
+import { ERROR_MESSAGES } from '@errors/error-messages';
 
 @Injectable()
 export class AuthService {
@@ -54,7 +58,9 @@ export class AuthService {
 
     const passwordMatch = await this.comparePassword(password, user.password);
     if (!passwordMatch) {
-      throw new BadRequestException(ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message);
+      throw new BadRequestException(
+        ERROR_MESSAGES.INVALID_EMAIL_OR_PASSWORD.message,
+      );
     }
 
     return user;

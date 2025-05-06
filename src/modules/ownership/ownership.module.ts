@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { OwnershipService } from '../../services/ownership.service';
-import { Deck, DeckSchema } from '../decks/entities/deck.entity';
-import { Card, CardSchema } from '../cards/entities/cards.entity';
+import { OwnershipService } from '@services/ownership.service';
+import { Deck, DeckSchema } from '@modules/decks/entities/deck.entity';
+import { Card, CardSchema } from '@modules/cards/entities/cards.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: Deck.name, schema: DeckSchema },
-      { name: Card.name, schema: CardSchema }
-    ])
+      { name: Card.name, schema: CardSchema },
+    ]),
   ],
   providers: [OwnershipService],
-  exports: [OwnershipService]
+  exports: [OwnershipService],
 })
-export class OwnershipModule {} 
+export class OwnershipModule {}
