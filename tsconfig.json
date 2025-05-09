@@ -27,7 +27,10 @@
       "@middlewares/*": ["src/middlewares/*"],
       "@modules/*": ["src/modules/*"],
       "@providers/*": ["src/providers/*"],
-      "@services/*": ["src/services/*"]
+      "@services/*": ["src/services/*"],
+      "@kafka/*": ["src/kafka/*"],
+      "@grpc/*": ["src/modules/grpc/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "watchOptions": {
