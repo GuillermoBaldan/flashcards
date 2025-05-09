@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package flashcards;
+
+service Flashcards {
+  rpc ProcessDeckShareResponse (DeckShareResponseRequest) returns (DeckShareResponse);
+}
+
+message DeckShareResponseRequest {
+  string request_id = 1;
+  string deck_id = 2;
+  string sender_id = 3;
+  string receiver_id = 4;
+  string response = 5;
+}
+
+message DeckShareResponse {
+  bool success = 1;
+  string message = 2;
+} 

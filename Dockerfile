@@ -16,6 +16,9 @@ RUN npm install
 # Copia el resto de los archivos y el directorio de trabajo
 COPY . .
 
+# Copia el archivo .proto
+COPY src/modules/grpc/flashcards.proto ./dist/modules/grpc/
+
 # Expone el puerto interno de la API
 EXPOSE ${API_INTERNAL_PORT}
 
