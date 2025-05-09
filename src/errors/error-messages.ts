@@ -163,4 +163,30 @@ export const ERROR_MESSAGES = {
     message: 'Invalid card count',
     code: 400,
   },
+
+  // Deck sharing errors
+  REQUEST_ALREADY_PROCESSED: {
+    message: 'La solicitud ya fue procesada',
+    code: 400,
+  },
+  INVALID_STATUS: {
+    message: 'Estado de solicitud inválido',
+    code: 400,
+  },
+  REQUEST_EXPIRED: {
+    message: 'La solicitud ha expirado',
+    code: 400,
+  },
+  DUPLICATE_REQUEST: {
+    message: 'Ya existe una solicitud pendiente para este mazo y usuario',
+    code: 400,
+  },
+  REQUEST_NOT_FOUND: {
+    message: 'Solicitud no encontrada',
+    code: 404,
+  },
+  SELF_REQUEST: {
+    message: 'No puedes enviar una solicitud a ti mismo',
+    code: 400,
+  },
 };
