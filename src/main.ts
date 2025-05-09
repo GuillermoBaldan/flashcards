@@ -3,6 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
 import * as cookieParser from 'cookie-parser';
+import { MicroserviceOptions } from '@nestjs/microservices';
+import { grpcServerOptions } from '@modules/grpc/grpc.server';
 
 async function bootstrap() {
   dotenv.config();
@@ -25,7 +27,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  app.connectMicroservice<MicroserviceOptions>(grpcServerOptions);
+  await app.startAllMicroservices();
   await app.listen(process.env.API_INTERNAL_PORT);
 }
 bootstrap();
- 
