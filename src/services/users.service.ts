@@ -126,4 +126,20 @@ export class UsersService {
       )
       .exec();
   }
+
+  async searchUsers(term: string, excludeUserId?: string): Promise<User[]> {
+    const query: any = {
+      username: { $regex: term, $options: 'i' },
+    };
+
+    if (excludeUserId) {
+      query._id = { $ne: excludeUserId };
+    }
+
+    return this.userModel
+      .find(query)
+      .select('_id username email')
+      .limit(10)
+      .exec();
+  }
 }

@@ -8,6 +8,8 @@ import {
   UseInterceptors,
   BadRequestException,
   Req,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiTags, ApiResponse, ApiOperation, ApiBody } from '@nestjs/swagger';
 import { CreateUserDto } from '@modules/users/dto/create-user.dto';
@@ -163,5 +165,22 @@ export class UsersController {
   async remove(@Req() req: Request): Promise<User> {
     const userId = req.user.id;
     return this.usersService.remove(userId);
+  }
+
+  @Get('search')
+  @ApiOperation({ summary: 'Buscar usuarios por username' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de usuarios encontrados',
+    type: [User],
+  })
+  @UseGuards(AuthMiddleware)
+  async searchUsers(@Query('term') term: string, @Req() req: Request) {
+    if (!term || term.length < 3) {
+      throw new BadRequestException(
+        'El término de búsqueda debe tener al menos 3 caracteres',
+      );
+    }
+    return this.usersService.searchUsers(term, req.user.id);
   }
 }
