@@ -1,7 +1,7 @@
 export interface NotificationPayload {
   user_id: string;
   type: 'deck_share_request' | 'deck_share_response' | 'reminder';
-  message: string;
+  message?: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired' | 'read' | 'archived';
   sender_id?: string;
   metadata?: {

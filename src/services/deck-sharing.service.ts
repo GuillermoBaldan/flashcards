@@ -80,7 +80,6 @@ export class DeckSharingService {
     const notification: NotificationPayload = {
       user_id: receiverId,
       type: 'deck_share_request',
-      message: `${sender.username} wants to share the deck ${deck.name} with you.`,
       status: 'pending',
       sender_id: senderId,
       metadata: {
@@ -145,7 +144,6 @@ export class DeckSharingService {
     const notification: NotificationPayload = {
       type: 'deck_share_response',
       user_id: request.senderId,
-      message: `${request.receiverId} has ${response} your request to share the deck ${deck.name}.`,
       status: 'expired',
       metadata: {
         deck_color: deck.color,
