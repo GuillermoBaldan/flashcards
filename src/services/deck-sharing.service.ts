@@ -149,6 +149,7 @@ export class DeckSharingService {
         deck_color: deck.color,
         response,
       },
+      created_at: new Date(),
     };
 
     const notificationSent =

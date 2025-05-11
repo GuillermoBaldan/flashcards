@@ -13,7 +13,7 @@ export interface NotificationPayload {
     sender_name?: string;
   };
   expires_at?: Date;
-  created_at?: Date;
+  created_at: Date;
 }
 
 // Tipos auxiliares
