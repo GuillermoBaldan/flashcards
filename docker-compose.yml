@@ -13,8 +13,10 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    depends_on:
+      - mongo_db
     networks:
-      - network
+      - flashcards_network
 
   mongo_db:
     container_name: ${MONGO_DB_CONTAINER_NAME}
@@ -33,10 +35,10 @@ services:
     volumes:
       - mongo_data:/data/db
     networks:
-      - network
+      - flashcards_network
 
   mongo_backup:
-    profiles: ["backup"]
+    profiles: ['backup']
     container_name: ${MONGO_BACKUP_CONTAINER_NAME}
     image: mongo:latest
     logging:
@@ -51,12 +53,13 @@ services:
         sleep 86400;
       done"
     networks:
-      - network
+      - flashcards_network
 
 networks:
-  network:
-    name: flashcards_network
+  flashcards_network:
     driver: bridge
+    name: flashcards_network
+    attachable: true
 
 volumes:
   mongo_data:
