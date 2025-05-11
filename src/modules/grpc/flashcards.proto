@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package flashcards;
+package proto;
 
 service Flashcards {
   rpc ProcessDeckShareResponse (DeckShareResponseRequest) returns (DeckShareResponse);
@@ -8,13 +8,15 @@ service Flashcards {
 
 message DeckShareResponseRequest {
   string request_id = 1;
-  string deck_id = 2;
-  string sender_id = 3;
-  string receiver_id = 4;
-  string response = 5;
+  string notification_id = 2;
+  string deck_id = 3;
+  string sender_id = 4;
+  string receiver_id = 5;
+  string response = 6;
 }
 
 message DeckShareResponse {
-  bool success = 1;
-  string message = 2;
+  string request_id = 1;
+  bool success = 2;
+  string message = 3;
 } 

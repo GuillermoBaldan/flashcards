@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import {
   DeckShareRequest,
@@ -21,7 +21,7 @@ import { AuthModule } from '@auth/auth.module';
     UsersModule,
     DecksModule,
     KafkaModule,
-    GrpcModule,
+    forwardRef(() => GrpcModule),
     OwnershipModule,
     AuthModule,
   ],

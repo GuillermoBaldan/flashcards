@@ -12,6 +12,10 @@ export class NotificationsGrpcService implements OnModuleInit {
 
   onModuleInit() {
     this.flashcardsService = this.client.getService('Flashcards');
+    if (this.flashcardsService) {
+    } else {
+      console.error('Failed to initialize gRPC client.');
+    }
   }
 
   processDeckShareResponse(data: {
