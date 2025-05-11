@@ -30,7 +30,8 @@
       "@services/*": ["src/services/*"],
       "@kafka/*": ["src/kafka/*"],
       "@grpc/*": ["src/modules/grpc/*"],
-      "@types/*": ["src/types/*"]
+      "@types/*": ["src/types/*"],
+      "@interfaces/*": ["src/interfaces/*"]
     }
   },
   "watchOptions": {
