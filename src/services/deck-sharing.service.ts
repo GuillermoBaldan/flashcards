@@ -11,11 +11,15 @@ import { DecksService } from '@services/decks.service';
 import { KafkaService } from '@services/kafka.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ERROR_MESSAGES } from '@errors/error-messages';
-import { StatusType } from '@constants/constants';
+import { ResponseType } from '@constants/constants';
 import { OwnershipService } from '@services/ownership.service';
+import { Logger } from '@nestjs/common';
+import { NotificationPayload } from '@interfaces/notification.interface';
 
 @Injectable()
 export class DeckSharingService {
+  private readonly logger = new Logger(DeckSharingService.name);
+
   constructor(
     @InjectModel(DeckShareRequest.name)
     private readonly deckShareRequestModel: Model<DeckShareRequest>,
@@ -56,30 +60,41 @@ export class DeckSharingService {
 
     const deck = await this.decksService.findOne(deckId, senderId);
 
+    const now = new Date();
+    const expiresAt = new Date();
+    expiresAt.setDate(now.getDate() + 7); // Expira en 7 días
+
     const request = new this.deckShareRequestModel({
       requestId: uuidv4(),
       senderId,
       receiverId,
       deckId,
       status: 'pending',
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 dias
+      expiresAt,
+      createdAt: now,
+      updatedAt: now,
     });
 
     await request.save();
 
-    await this.kafkaService.publishNotification({
+    const notification: NotificationPayload = {
+      user_id: receiverId,
       type: 'deck_share_request',
-      userId: receiverId,
-      senderId,
-      message: `${sender.username} quiere compartir el mazo "${deck.name}" contigo.`,
+      message: `${sender.username} wants to share the deck ${deck.name} with you.`,
+      status: 'pending',
+      sender_id: senderId,
       metadata: {
-        requestId: request.requestId,
-        deckId,
-        deckName: deck.name,
-        deckColor: deck.color,
-        senderName: sender.username,
+        request_id: request.requestId,
+        deck_id: deckId,
+        deck_name: deck.name,
+        deck_color: deck.color,
+        sender_name: sender.username,
       },
-    });
+      created_at: now,
+      expires_at: expiresAt,
+    };
+
+    await this.kafkaService.publishNotification(notification);
 
     return request;
   }
@@ -103,8 +118,8 @@ export class DeckSharingService {
     return request;
   }
 
-  async processResponse(requestId: string, response: StatusType) {
-    const validResponses: StatusType[] = ['accepted', 'rejected'];
+  async processResponse(requestId: string, response: ResponseType) {
+    const validResponses: ResponseType[] = ['accepted', 'rejected'];
     if (!validResponses.includes(response)) {
       throw new BadRequestException(ERROR_MESSAGES.INVALID_STATUS.message);
     }
@@ -122,16 +137,30 @@ export class DeckSharingService {
       { $set: { status: 'expired' } },
     );
 
-    await this.kafkaService.publishNotification({
+    const deck = await this.decksService.findOne(
+      request.deckId,
+      request.senderId,
+    );
+
+    const notification: NotificationPayload = {
       type: 'deck_share_response',
-      userId: request.senderId,
-      message: `Tu solicitud para compartir el mazo fue ${response}`,
+      user_id: request.senderId,
+      message: `${request.receiverId} has ${response} your request to share the deck ${deck.name}.`,
+      status: 'expired',
       metadata: {
-        requestId,
-        deckId: request.deckId,
+        deck_color: deck.color,
         response,
       },
-    });
+    };
+
+    const notificationSent =
+      await this.kafkaService.publishNotification(notification);
+
+    if (!notificationSent) {
+      this.logger.error('Failed to send Kafka notification for request', {
+        requestId,
+      });
+    }
 
     return request;
   }

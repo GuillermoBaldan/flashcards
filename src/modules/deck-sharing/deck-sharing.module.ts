@@ -10,6 +10,8 @@ import { UsersModule } from '@modules/users/users.module';
 import { DecksModule } from '@modules/decks/decks.module';
 import { KafkaModule } from '@kafka/kafka.module';
 import { GrpcModule } from '@modules/grpc/grpc.module';
+import { OwnershipModule } from '@modules/ownership/ownership.module';
+import { AuthModule } from '@auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { GrpcModule } from '@modules/grpc/grpc.module';
     DecksModule,
     KafkaModule,
     GrpcModule,
+    OwnershipModule,
+    AuthModule,
   ],
   providers: [DeckSharingService],
   controllers: [DeckSharingController],
