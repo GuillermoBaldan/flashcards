@@ -20,7 +20,7 @@ COPY . .
 COPY src/modules/grpc/flashcards.proto ./dist/modules/grpc/
 
 # Expone el puerto interno de la API
-EXPOSE ${API_INTERNAL_PORT}
+EXPOSE ${API_INTERNAL_PORT} ${GRPC_PORT}
 
 # Comando para ejecutar la aplicación en modo de desarrollo
 CMD ["npm", "run", "dev"]
