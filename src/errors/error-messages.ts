@@ -169,8 +169,8 @@ export const ERROR_MESSAGES = {
     message: 'La solicitud ya fue procesada',
     code: 400,
   },
-  INVALID_STATUS: {
-    message: 'Estado de solicitud inválido',
+  INVALID_RESPONSE: {
+    message: 'Respuesta inválida',
     code: 400,
   },
   REQUEST_EXPIRED: {
@@ -188,5 +188,13 @@ export const ERROR_MESSAGES = {
   SELF_REQUEST: {
     message: 'No puedes enviar una solicitud a ti mismo',
     code: 400,
+  },
+  RECEIVER_NOT_FOUND: {
+    message: 'El usuario receptor no existe',
+    code: 404,
+  },
+  SENDER_NOT_FOUND: {
+    message: 'El usuario emisor no existe',
+    code: 404,
   },
 };
