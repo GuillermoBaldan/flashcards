@@ -137,8 +137,10 @@ export class DecksService {
       throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
     }
 
+    const uniqueName = await this.generateUniqueDeckName(deck.name, toUserId);
+
     const newDeck = new this.deckModel({
-      name: deck.name,
+      name: uniqueName,
       color: deck.color,
       userId: toUserId,
       cards_id: [],
@@ -173,5 +175,42 @@ export class DecksService {
     await this.usersService.addDeckToUser(toUserId, newDeck._id.toString());
 
     return newDeck;
+  }
+
+  private async generateUniqueDeckName(
+    originalName: string,
+    userId: string,
+  ): Promise<string> {
+    const escapedName = originalName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`^${escapedName}(\\d+)?$`);
+    const existingDecks = await this.deckModel
+      .find({
+        userId,
+        name: regex,
+      })
+      .exec();
+
+    if (existingDecks.length === 0) {
+      return originalName;
+    }
+
+    let maxNumber = 0;
+    for (const deck of existingDecks) {
+      const match = deck.name.match(new RegExp(`^${escapedName}(\\d+)$`));
+      if (match && match[1]) {
+        const number = parseInt(match[1], 10);
+        if (number > maxNumber) {
+          maxNumber = number;
+        }
+      }
+    }
+
+    const hasExactMatch = existingDecks.some(
+      (deck) => deck.name === originalName,
+    );
+
+    return hasExactMatch || maxNumber > 0
+      ? `${originalName}${maxNumber + 1}`
+      : originalName;
   }
 }
