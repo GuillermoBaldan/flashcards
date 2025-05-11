@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, IsIn } from 'class-validator';
-import { StatusType } from '@constants/constants';
+import { ResponseType } from '@constants/constants';
 
 export class ProcessDeckShareResponseDto {
   @ApiProperty({
@@ -10,5 +10,5 @@ export class ProcessDeckShareResponseDto {
   @IsString()
   @IsNotEmpty()
   @IsIn(['accepted', 'rejected'])
-  response: StatusType;
+  response: ResponseType;
 }

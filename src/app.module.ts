@@ -11,6 +11,10 @@ import { UserModel } from '@modules/users/entities/user.entity';
 import { routes, RouteConfig } from '@config/routes';
 import { SanitizeMiddleware } from '@middlewares/sanitize.middleware';
 import { GameModule } from '@modules/game/game.module';
+import { DeckSharingModule } from '@modules/deck-sharing/deck-sharing.module';
+import { KafkaModule } from '@kafka/kafka.module';
+import { GrpcModule } from '@modules/grpc/grpc.module';
+import { OwnershipModule } from '@modules/ownership/ownership.module';
 
 @Module({
   imports: [
@@ -44,11 +48,15 @@ import { GameModule } from '@modules/game/game.module';
       },
       inject: [ConfigService],
     }),
+    AuthModule,
     DecksModule,
     CardsModule,
-    AuthModule,
-    UserModel,
     GameModule,
+    DeckSharingModule,
+    KafkaModule,
+    GrpcModule,
+    OwnershipModule,
+    UserModel,
   ],
   providers: [AuthService, UsersService],
 })
