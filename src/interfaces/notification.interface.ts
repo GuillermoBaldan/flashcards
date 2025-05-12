@@ -1,13 +1,12 @@
-import { title } from 'process';
 export interface NotificationPayload {
   user_id: string;
   type: 'deck_share_request' | 'deck_share_response' | 'reminder' | 'system';
-  title?: string;
   message?: string;
-  action?: string;
   status: 'pending' | 'accepted' | 'rejected' | 'expired' | 'read' | 'archived';
   sender_id?: string;
   metadata?: {
+    title?: string;
+    action?: string;
     request_id?: string;
     deck_id?: string;
     response?: 'accepted' | 'rejected';
