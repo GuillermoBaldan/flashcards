@@ -130,13 +130,19 @@ export class DeckSharingService {
     // Verificación de respuesta válida
     const validResponses: ResponseType[] = ['accepted', 'rejected'];
     if (!validResponses.includes(response)) {
-      await this.kafkaService.publishNotification({
+      const invalidResponseNotification: NotificationPayload = {
         user_id: receiverId,
         type: 'system',
-        action: 'alert',
-        title: 'Error',
+        status: 'pending',
+        metadata: {
+          action: 'alert',
+          title: 'Error',
+        },
         message: 'Respuesta inválida',
-      });
+        created_at: new Date(),
+      };
+
+      await this.kafkaService.publishNotification(invalidResponseNotification);
       throw new BadRequestException(ERROR_MESSAGES.INVALID_RESPONSE.message);
     }
 
@@ -149,34 +155,52 @@ export class DeckSharingService {
     ) {
       const deck = await this.decksService.findOne(deckId, senderId);
 
-      await this.kafkaService.publishNotification({
+      const senderErrorNotification: NotificationPayload = {
         user_id: senderId,
         type: 'system',
-        action: 'alert',
-        title: 'Error',
+        status: 'pending',
+        metadata: {
+          action: 'alert',
+          title: 'Error',
+        },
         message: 'Algo ha fallado al compartir el mazo: ' + deck.name,
-      });
+        created_at: new Date(),
+      };
 
-      await this.kafkaService.publishNotification({
+      await this.kafkaService.publishNotification(senderErrorNotification);
+
+      const receiverErrorNotification: NotificationPayload = {
         user_id: receiverId,
         type: 'system',
-        action: 'alert',
-        title: 'Error',
+        status: 'pending',
+        metadata: {
+          action: 'alert',
+          title: 'Error',
+        },
         message: 'Algo ha fallado al recibir el mazo: ' + deck.name,
-      });
+        created_at: new Date(),
+      };
+
+      await this.kafkaService.publishNotification(receiverErrorNotification);
 
       throw new BadRequestException('Los datos de la solicitud no coinciden');
     }
 
     // Verificación de estado de la solicitud
     if (request.status !== 'pending') {
-      await this.kafkaService.publishNotification({
+      const alreadyProcessedNotification: NotificationPayload = {
         user_id: receiverId,
         type: 'system',
-        action: 'alert',
-        title: 'Error',
+        status: 'pending',
+        metadata: {
+          action: 'alert',
+          title: 'Error',
+        },
         message: ERROR_MESSAGES.REQUEST_ALREADY_PROCESSED.message,
-      });
+        created_at: new Date(),
+      };
+
+      await this.kafkaService.publishNotification(alreadyProcessedNotification);
 
       throw new BadRequestException(
         ERROR_MESSAGES.REQUEST_ALREADY_PROCESSED.message,
@@ -188,31 +212,45 @@ export class DeckSharingService {
       const sender = await this.usersService.findOne(senderId);
 
       if (!sender) {
-        await this.kafkaService.publishNotification({
+        const senderNotFoundNotification: NotificationPayload = {
           user_id: receiverId,
           type: 'system',
-          action: 'alert',
-          title: 'Error',
+          status: 'pending',
+          metadata: {
+            action: 'alert',
+            title: 'Error',
+          },
           message: ERROR_MESSAGES.SENDER_NOT_FOUND.message,
-        });
+          created_at: new Date(),
+        };
+
+        await this.kafkaService.publishNotification(senderNotFoundNotification);
         throw new NotFoundException(ERROR_MESSAGES.SENDER_NOT_FOUND.message);
       }
     } catch (error) {
       throw new BadRequestException(ERROR_MESSAGES.USER_NOT_FOUND.message);
     }
 
-    // Verificación de existencia de rece ptor
+    // Verificación de existencia de receptor
     try {
       const receiver = await this.usersService.findOne(receiverId);
 
       if (!receiver) {
-        await this.kafkaService.publishNotification({
+        const receiverNotFoundNotification: NotificationPayload = {
           user_id: senderId,
           type: 'system',
-          action: 'alert',
-          title: 'Error',
+          status: 'pending',
+          metadata: {
+            action: 'alert',
+            title: 'Error',
+          },
           message: ERROR_MESSAGES.RECEIVER_NOT_FOUND.message,
-        });
+          created_at: new Date(),
+        };
+
+        await this.kafkaService.publishNotification(
+          receiverNotFoundNotification,
+        );
         throw new NotFoundException(ERROR_MESSAGES.RECEIVER_NOT_FOUND.message);
       }
     } catch (error) {
@@ -234,7 +272,7 @@ export class DeckSharingService {
     const deck = await this.decksService.findOne(deckId, senderId);
     const receiver = await this.usersService.findOne(receiverId);
 
-    await this.kafkaService.publishNotification({
+    const shareResponseNotification: NotificationPayload = {
       user_id: senderId,
       type: 'deck_share_response',
       status: response,
@@ -244,13 +282,21 @@ export class DeckSharingService {
         username: receiver.username,
       },
       created_at: new Date(),
-    });
+    };
 
-    await this.kafkaService.publishNotification({
+    await this.kafkaService.publishNotification(shareResponseNotification);
+
+    const refreshDecksNotification: NotificationPayload = {
       user_id: receiverId,
       type: 'system',
-      action: 'refreshDecks',
-    });
+      status: 'pending',
+      metadata: {
+        action: 'refreshDecks',
+      },
+      created_at: new Date(),
+    };
+
+    await this.kafkaService.publishNotification(refreshDecksNotification);
 
     return request;
   }
