@@ -89,8 +89,6 @@ export class DecksService {
 
     const deckCards = await this.cardModel.find({ deckId: id }).exec();
 
-    console.log('deckCards', deckCards);
-
     if (deckCards.length > 0) {
       for (const card of deckCards) {
         await this.cardModel.deleteOne({ _id: card.id }).exec();
