@@ -86,10 +86,23 @@ export class DecksService {
 
   async remove(id: string, userId: string): Promise<void> {
     await this.ownershipService.verifyDeckOwnership(id, userId);
-    const result = await this.deckModel.deleteOne({ _id: id });
-    if (result.deletedCount === 0) {
-      throw new NotFoundException('Deck not found');
+
+    const deckCards = await this.cardModel.find({ deckId: id }).exec();
+
+    console.log('deckCards', deckCards);
+
+    if (deckCards.length > 0) {
+      for (const card of deckCards) {
+        await this.cardModel.deleteOne({ _id: card.id }).exec();
+      }
     }
+
+    const result = await this.deckModel.deleteOne({ _id: id, userId }).exec();
+
+    if (result.deletedCount === 0) {
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
+    }
+
     await this.usersService.removeDeckFromUser(userId, id);
   }
 
@@ -179,21 +192,22 @@ export class DecksService {
         .exec();
 
       for (const card of cards) {
-        const newCard = new this.cardModel({
+        const newCard = await this.cardModel.create({
           front: card.front,
           back: card.back,
           deckId: newDeck._id.toString(),
           cardType: card.cardType,
           gameOptions: card.gameOptions,
-          lastReview: card.lastReview,
-          nextReview: card.nextReview,
+          lastReview: Math.floor(Date.now() / 1000),
+          nextReview: Math.floor(Date.now() / 1000) + 30,
         });
 
-        await newCard.save();
-        newDeck.cards_id.push(newCard._id.toString());
+        await this.addCardToDeck(
+          newDeck._id.toString(),
+          newCard._id.toString(),
+        );
       }
 
-      await newDeck.save();
       await this.refreshFirstReviewDate(deck._id.toString());
     }
 
