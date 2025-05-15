@@ -35,12 +35,6 @@ export class CardsService {
 
     const savedCard = await card.save();
 
-    await this.updateDeckFirstReviewDate(
-      createCardDto.deckId,
-      savedCard.nextReview,
-      userId,
-    );
-
     await this.decksService.addCardToDeck(
       createCardDto.deckId,
       savedCard._id.toString(),
@@ -58,10 +52,16 @@ export class CardsService {
     };
   }
 
-  async findByDeckId(deckId: string, userId: string): Promise<ReadCardDto[]> {
+  async findByDeckId(
+    deckId: string,
+    userId: string,
+    mongoParams?: any,
+  ): Promise<ReadCardDto[]> {
     await this.ownershipService.verifyDeckOwnership(deckId, userId);
     const objectIdDeckId = new Types.ObjectId(deckId);
-    const cards = await this.cardModel.find({ deckId: objectIdDeckId }).exec();
+    const cards = await this.cardModel
+      .find({ deckId: objectIdDeckId, ...mongoParams })
+      .exec();
 
     return cards.map((card) => ({
       id: card._id.toString(),
@@ -96,11 +96,7 @@ export class CardsService {
     );
 
     if (updateCardDto.nextReview) {
-      await this.updateDeckFirstReviewDate(
-        card.deckId,
-        updateCardDto.nextReview,
-        userId,
-      );
+      await this.decksService.refreshFirstReviewDate(card.deckId.toString());
     }
 
     return {
@@ -143,20 +139,5 @@ export class CardsService {
       throw new NotFoundException(ERROR_MESSAGES.CARD_NOT_FOUND.message);
     }
     return card;
-  }
-
-  private async updateDeckFirstReviewDate(
-    deckId: string,
-    newNextReview: number,
-    userId: string,
-  ): Promise<void> {
-    const deck = await this.decksService.findOne(deckId, userId);
-
-    if (!deck.firstCardNextReview || newNextReview < deck.firstCardNextReview) {
-      await this.deckModel.updateOne(
-        { _id: deckId },
-        { $set: { firstCardNextReview: newNextReview } },
-      );
-    }
   }
 }

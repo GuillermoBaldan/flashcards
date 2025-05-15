@@ -117,6 +117,8 @@ export class DecksService {
       { _id: deckId },
       { $push: { cards_id: cardId } },
     );
+
+    await this.refreshFirstReviewDate(deckId);
   }
 
   async removeCardFromDeck(deckId: string, cardId: string): Promise<void> {
@@ -126,6 +128,29 @@ export class DecksService {
     }
 
     deck.cards_id = deck.cards_id.filter((id) => id !== cardId);
+    await deck.save();
+
+    await this.refreshFirstReviewDate(deck._id.toString());
+  }
+
+  async refreshFirstReviewDate(deckId: string): Promise<void> {
+    const deck = await this.deckModel.findOne({ _id: deckId }).exec();
+    if (!deck) {
+      throw new NotFoundException(ERROR_MESSAGES.DECK_NOT_FOUND.message);
+    }
+
+    const firstCard = await this.cardModel
+      .findOne({ deckId })
+      .sort({ nextReview: 1 })
+      .exec();
+
+    if (!firstCard) {
+      deck.firstCardNextReview = null;
+      await deck.save();
+      return;
+    }
+
+    deck.firstCardNextReview = firstCard.nextReview;
     await deck.save();
   }
 
@@ -144,7 +169,6 @@ export class DecksService {
       color: deck.color,
       userId: toUserId,
       cards_id: [],
-      firstCardNextReview: deck.firstCardNextReview,
     });
 
     await newDeck.save();
@@ -170,6 +194,7 @@ export class DecksService {
       }
 
       await newDeck.save();
+      await this.refreshFirstReviewDate(deck._id.toString());
     }
 
     await this.usersService.addDeckToUser(toUserId, newDeck._id.toString());

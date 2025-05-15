@@ -11,6 +11,8 @@ import { CardResultDto } from '@modules/game/dto/update-card-results.dto';
 import { Deck, DeckDocument } from '@modules/decks/entities/deck.entity';
 import { AvailableDecksResponseDto } from '@modules/game/dto/available-decks.dto';
 import { OwnershipService } from '@services/ownership.service';
+import { CardsService } from '@services/cards.service';
+import { ERROR_MESSAGES } from '@errors/error-messages';
 
 @Injectable()
 export class GameService {
@@ -19,28 +21,30 @@ export class GameService {
     @InjectModel(Deck.name) private readonly deckModel: Model<DeckDocument>,
     private readonly decksService: DecksService,
     private readonly ownershipService: OwnershipService,
+    private readonly cardsService: CardsService,
   ) {}
 
   async startGame(deckIds: string[], userId: string) {
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    let cards = [];
+
     for (const deckId of deckIds) {
-      await this.ownershipService.verifyDeckOwnership(deckId, userId);
+      const cardsForDeck = await this.cardsService.findByDeckId(
+        deckId,
+        userId,
+        { nextReview: { $lte: currentTimestamp } },
+      );
+      cards = [...cards, ...cardsForDeck];
     }
 
-    const currentTimestamp = Math.floor(Date.now() / 1000);
-    const cards = await this.cardModel
-      .find({
-        deckId: { $in: deckIds },
-        nextReview: { $lte: currentTimestamp },
-      })
-      .sort({ nextReview: 1 })
-      .exec();
+    cards.sort((a, b) => a.nextReview - b.nextReview);
 
     if (cards.length === 0) {
       throw new BadRequestException('No hay cartas disponibles para jugar');
     }
 
     return cards.map((card) => ({
-      id: card._id.toString(),
+      id: card.id,
       front: card.front,
       back: card.back,
       deckId: card.deckId,
@@ -51,41 +55,21 @@ export class GameService {
   }
 
   async updateCardResults(cardResults: CardResultDto[], userId: string) {
-    const deckIds = new Set<string>();
-
     for (const result of cardResults) {
-      const card = await this.cardModel.findById(result.cardId).exec();
+      const card = await this.cardsService.findOne(result.cardId, userId);
+
       if (!card) {
-        throw new NotFoundException('Carta no encontrada');
+        throw new NotFoundException(ERROR_MESSAGES.CARD_NOT_FOUND.message);
       }
 
-      await this.ownershipService.verifyDeckOwnership(
-        card.deckId.toString(),
-        userId,
-      );
-      deckIds.add(card.deckId);
-
-      await this.cardModel.updateOne(
-        { _id: result.cardId },
+      await this.cardsService.update(
+        result.cardId,
         {
           lastReview: result.lastReview,
           nextReview: result.nextReview,
         },
+        userId,
       );
-    }
-
-    for (const deckId of deckIds) {
-      const nextCard = await this.cardModel
-        .findOne({ deckId })
-        .sort({ nextReview: 1 })
-        .exec();
-
-      if (nextCard) {
-        await this.deckModel.updateOne(
-          { _id: deckId },
-          { $set: { firstCardNextReview: nextCard.nextReview } },
-        );
-      }
     }
 
     return { success: true };
